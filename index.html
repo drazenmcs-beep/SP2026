@@ -146,6 +146,42 @@
   }
   .del-btn:hover { color: #ef4444; background: #fee2e2; }
 
+  /* PIN OVERLAY */
+  #pin-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(135deg, #1e3a5f, #0f172a);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #pin-box {
+    background: #fff; border-radius: 16px; padding: 40px 36px;
+    text-align: center; width: 300px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  #pin-box .ball { font-size: 36px; margin-bottom: 8px; }
+  #pin-box h2 { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  #pin-box p { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+  .pin-dots { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; }
+  .pin-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #e2e8f0; transition: background .15s;
+  }
+  .pin-dot.filled { background: #2563eb; }
+  .pin-numpad { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .pin-key {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 14px; font-size: 18px; font-weight: 700; color: #1e293b;
+    cursor: pointer; transition: background .1s, transform .1s;
+    user-select: none;
+  }
+  .pin-key:hover { background: #eff6ff; border-color: #bfdbfe; }
+  .pin-key:active { transform: scale(.94); }
+  .pin-key.del { font-size: 14px; color: #64748b; }
+  .pin-key.empty { background: transparent; border: none; cursor: default; }
+  #pin-error {
+    font-size: 12px; color: #ef4444; margin-top: 12px;
+    min-height: 16px; font-weight: 600;
+  }
+
   .empty-msg {
     text-align: center; padding: 40px; color: #94a3b8; font-size: 14px;
   }
@@ -233,6 +269,36 @@
 </style>
 </head>
 <body>
+
+<!-- PIN OVERLAY -->
+<div id="pin-overlay">
+  <div id="pin-box">
+    <div class="ball">⚽</div>
+    <h2>SP 2026</h2>
+    <p>Upiši PIN za pristup</p>
+    <div class="pin-dots">
+      <div class="pin-dot" id="dot-0"></div>
+      <div class="pin-dot" id="dot-1"></div>
+      <div class="pin-dot" id="dot-2"></div>
+      <div class="pin-dot" id="dot-3"></div>
+    </div>
+    <div class="pin-numpad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key empty"></button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key del" onclick="pinDel()">⌫</button>
+    </div>
+    <div id="pin-error"></div>
+  </div>
+</div>
 
 <header>
   <div class="ball">⚽</div>
@@ -365,6 +431,49 @@
 </div>
 
 <script>
+// PIN zaštita — pohranjen samo SHA-256 hash, ne PIN
+const PIN_HASH = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+let pinInput = '';
+
+async function hashString(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function pinKey(digit) {
+  if (pinInput.length >= 4) return;
+  pinInput += digit;
+  document.getElementById('dot-' + (pinInput.length - 1)).classList.add('filled');
+  if (pinInput.length === 4) setTimeout(checkPin, 120);
+}
+
+function pinDel() {
+  if (!pinInput.length) return;
+  document.getElementById('dot-' + (pinInput.length - 1)).classList.remove('filled');
+  pinInput = pinInput.slice(0, -1);
+  document.getElementById('pin-error').textContent = '';
+}
+
+async function checkPin() {
+  const h = await hashString(pinInput);
+  if (h === PIN_HASH) {
+    document.getElementById('pin-overlay').style.display = 'none';
+    sessionStorage.setItem('pin_ok', '1');
+  } else {
+    document.getElementById('pin-error').textContent = 'Pogrešan PIN. Pokušaj ponovo.';
+    // reset
+    pinInput = '';
+    for (let i = 0; i < 4; i++) document.getElementById('dot-' + i).classList.remove('filled');
+  }
+}
+
+// Ako je PIN već unesen u ovoj sesiji, ne prikazuj overlay
+if (sessionStorage.getItem('pin_ok') === '1') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('pin-overlay').style.display = 'none';
+  });
+}
+
 const DRAZEN_KEY = 'tipping_drazen_v2';
 const DINKO_KEY  = 'tipping_dinko_v2';
 
