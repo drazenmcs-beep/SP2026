@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svjetsko prvenstvo u nogometu 2026.</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; min-height: 100vh; }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 24px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  header .ball { font-size: 28px; }
+  header h1 { font-size: 20px; font-weight: 700; color: #0f172a; }
+  header p { font-size: 12px; color: #94a3b8; margin-top: 1px; }
+
+  /* TABS */
+  .tabs-bar {
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex; gap: 0; padding: 0 24px;
+  }
+  .tab-btn {
+    padding: 14px 22px; border: none; background: none;
+    font-size: 14px; font-weight: 600; color: #64748b;
+    cursor: pointer; border-bottom: 3px solid transparent;
+    transition: color .15s, border-color .15s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tab-btn:hover { color: #1e293b; }
+  .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
+  .tab-pill {
+    background: #f1f5f9; color: #64748b;
+    font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 20px; min-width: 28px; text-align: center;
+    transition: background .15s, color .15s;
+  }
+  .tab-btn.active .tab-pill { background: #dbeafe; color: #2563eb; }
+
+  /* SUMMARY */
+  .summary {
+    display: flex; gap: 10px; padding: 16px 24px; flex-wrap: wrap;
+  }
+  .stat-card {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 14px 18px; display: flex; flex-direction: column;
+    align-items: center; min-width: 120px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .stat-card .val { font-size: 30px; font-weight: 800; }
+  .stat-card .lbl { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: .4px; margin-top: 2px; text-align: center; }
+  .sub-pts { font-size: 14px; font-weight: 600; opacity: .6; }
+  .c-blue { color: #2563eb; }
+  .c-green { color: #16a34a; }
+  .c-indigo { color: #4f46e5; }
+  .c-amber { color: #d97706; }
+  .c-slate { color: #475569; }
+
+  .container { padding: 0 24px 32px; }
+
+  /* ADD FORM */
+  .add-section {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .add-section h2 { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #374151; }
+  .form-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; }
+  .form-group input {
+    background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px;
+    color: #1e293b; padding: 8px 10px; font-size: 14px; outline: none;
+    transition: border-color .2s;
+  }
+  .form-group input:focus { border-color: #2563eb; background: #fff; }
+  .score-in { width: 52px; text-align: center; font-family: monospace; font-weight: 700; }
+  .team-in { width: 150px; }
+  .colon { align-self: center; color: #94a3b8; font-size: 18px; font-weight: 700; padding-bottom: 1px; }
+
+  .btn {
+    padding: 9px 16px; border: none; border-radius: 6px; cursor: pointer;
+    font-size: 13px; font-weight: 700; transition: opacity .15s, transform .1s;
+  }
+  .btn:hover { opacity: .88; }
+  .btn:active { transform: scale(.97); }
+  .btn-add { background: #2563eb; color: #fff; align-self: flex-end; }
+  .btn-clear { background: #fee2e2; color: #b91c1c; align-self: flex-end; }
+  .btn-export { background: #dcfce7; color: #15803d; }
+
+  .actions { display: flex; gap: 8px; margin-bottom: 14px; }
+
+  /* TABLE */
+  .table-wrap {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; table-layout: fixed; }
+  col.c-num     { width: 40px; }
+  col.c-teams   { width: 220px; }
+  col.c-tip     { width: 76px; }
+  col.c-actual  { width: 100px; }
+  col.c-pts     { width: 60px; }
+  col.c-reason  { width: 160px; }
+  col.c-del     { width: 32px; }
+  thead tr { background: #f8fafc; }
+  thead th {
+    padding: 7px 10px; text-align: left; color: #64748b;
+    font-size: 11px; text-transform: uppercase; letter-spacing: .4px;
+    border-bottom: 1px solid #e2e8f0; white-space: nowrap;
+  }
+  tbody tr { border-top: 1px solid #f1f5f9; transition: background .1s; }
+  tbody tr:hover { background: #f8fafc; }
+  td { padding: 5px 10px; vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+  td:first-child { overflow: visible; white-space: normal; }
+  td.teams { font-weight: 600; color: #0f172a; white-space: normal; word-break: break-word; }
+  td.score { font-family: monospace; font-size: 14px; }
+  td.actual { color: #64748b; }
+
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    font-weight: 800; font-size: 13px;
+  }
+  .b3 { background: #dcfce7; color: #16a34a; }
+  .b2 { background: #dbeafe; color: #2563eb; }
+  .b1 { background: #fef9c3; color: #b45309; }
+  .b0 { background: #f1f5f9; color: #94a3b8; }
+
+  .exact-tag {
+    display: inline-block; margin-left: 6px; font-size: 10px;
+    background: #dcfce7; color: #15803d; border-radius: 4px;
+    padding: 1px 5px; font-weight: 700; vertical-align: middle;
+  }
+  .reason { font-size: 11px; color: #94a3b8; }
+
+  .del-btn {
+    background: none; border: none; color: #cbd5e1; cursor: pointer;
+    font-size: 14px; padding: 3px 7px; border-radius: 4px;
+    transition: color .15s, background .15s;
+  }
+  .del-btn:hover { color: #ef4444; background: #fee2e2; }
+
+  .empty-msg {
+    text-align: center; padding: 40px; color: #94a3b8; font-size: 14px;
+  }
+
+  /* LEADERBOARD strip */
+  .leader {
+    background: linear-gradient(90deg, #eff6ff, #f0fdf4);
+    border: 1px solid #bfdbfe; border-radius: 10px;
+    padding: 14px 20px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .leader h3 { font-size: 13px; font-weight: 700; color: #374151; flex: none; }
+  .leader-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600;
+  }
+  .leader-item .pts { font-size: 20px; font-weight: 800; }
+  .trophy { font-size: 20px; }
+
+  @media (max-width: 600px) {
+    .team-in { width: 120px; }
+    header h1 { font-size: 17px; }
+    .tab-btn { padding: 12px 14px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ball">⚽</div>
+  <div>
+    <h1>Svjetsko prvenstvo u nogometu 2026.</h1>
+    <p>Kalkulator bodova</p>
+  </div>
+  <button id="save-btn" class="btn" onclick="saveAsHTML()"
+    style="margin-left:auto;background:#1d4ed8;color:#fff;padding:10px 20px;font-size:14px;">
+    💾 Spremi datoteku
+  </button>
+</header>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('drazen')" id="tab-drazen">
+    🟦 Dražen <span class="tab-pill" id="pill-drazen">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('dinko')" id="tab-dinko">
+    🟥 Dinko <span class="tab-pill" id="pill-dinko">0</span>
+  </button>
+</div>
+
+<!-- LEADERBOARD -->
+<div style="padding: 14px 24px 0">
+  <div class="leader">
+    <h3>🏆 Vodstvo</h3>
+    <div class="leader-item" id="lead-drazen">
+      <span>🟦 Dražen</span>
+      <span class="pts c-blue" id="lead-pts-drazen">0</span>
+      <span style="font-size:12px;color:#94a3b8">bod.</span>
+    </div>
+    <div class="leader-item" id="lead-dinko">
+      <span>🟥 Dinko</span>
+      <span class="pts c-slate" id="lead-pts-dinko">0</span>
+      <span style="font-size:12px;color:#94a3b8">bod.</span>
+    </div>
+    <div id="lead-winner" style="font-size:13px;color:#64748b;margin-left:auto"></div>
+  </div>
+</div>
+
+<!-- PER-PLAYER PANEL -->
+<div id="panel-drazen">
+  <div class="summary">
+    <div class="stat-card"><div class="val c-blue" id="d-total">0</div><div class="lbl">Ukupno bodova</div></div>
+    <div class="stat-card"><div class="val c-green" id="d-exact">0</div><div class="lbl" id="d-exact-lbl">Točan rezultat (0b)</div></div>
+    <div class="stat-card"><div class="val c-indigo" id="d-diff">0</div><div class="lbl" id="d-diff-lbl">Točna razlika (0b)</div></div>
+    <div class="stat-card"><div class="val c-amber" id="d-outcome">0</div><div class="lbl" id="d-outcome-lbl">Točan ishod (0b)</div></div>
+    <div class="stat-card"><div class="val c-slate" id="d-matches">0</div><div class="lbl">Utakmica</div></div>
+  </div>
+  <div class="container">
+    <div class="add-section">
+      <h2>➕ Dodaj utakmicu za Dražena</h2>
+      <div class="form-row">
+        <div class="form-group"><label>Domaćin</label><input type="text" id="dh" class="team-in" placeholder="npr. Brazil"></div>
+        <div class="form-group"><label>Gost</label><input type="text" id="da" class="team-in" placeholder="npr. Hrvatska"></div>
+        <div class="form-group"><label>Moj tip</label>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" id="dph" class="score-in" min="0" max="99" placeholder="0">
+            <span class="colon">:</span>
+            <input type="number" id="dpa" class="score-in" min="0" max="99" placeholder="0">
+          </div>
+        </div>
+        <div class="form-group"><label>Stvarni rezultat</label>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" id="drh" class="score-in" min="0" max="99" placeholder="0">
+            <span class="colon">:</span>
+            <input type="number" id="dra" class="score-in" min="0" max="99" placeholder="0">
+          </div>
+        </div>
+        <button class="btn btn-add" onclick="addMatch('drazen')">Dodaj</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-export" onclick="exportCSV('drazen')">⬇ Izvezi CSV</button>
+      <button class="btn btn-clear" onclick="clearAll('drazen')">🗑 Obriši sve</button>
+    </div>
+    <div class="table-wrap">
+      <table><colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"><col class="c-del"></colgroup><thead><tr>
+        <th>#</th><th>Utakmica</th><th>Moj tip</th><th>Stvarni rezultat</th><th>Bodovi</th><th>Komentar</th><th></th>
+      </tr></thead>
+      <tbody id="tbody-drazen"></tbody></table>
+      <div class="empty-msg" id="empty-drazen" style="display:none">Još nema utakmica ☝</div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-dinko" style="display:none">
+  <div class="summary">
+    <div class="stat-card"><div class="val c-blue" id="k-total">0</div><div class="lbl">Ukupno bodova</div></div>
+    <div class="stat-card"><div class="val c-green" id="k-exact">0</div><div class="lbl" id="k-exact-lbl">Točan rezultat (0b)</div></div>
+    <div class="stat-card"><div class="val c-indigo" id="k-diff">0</div><div class="lbl" id="k-diff-lbl">Točna razlika (0b)</div></div>
+    <div class="stat-card"><div class="val c-amber" id="k-outcome">0</div><div class="lbl" id="k-outcome-lbl">Točan ishod (0b)</div></div>
+    <div class="stat-card"><div class="val c-slate" id="k-matches">0</div><div class="lbl">Utakmica</div></div>
+  </div>
+  <div class="container">
+    <div class="add-section">
+      <h2>➕ Dodaj utakmicu za Dinka</h2>
+      <div class="form-row">
+        <div class="form-group"><label>Domaćin</label><input type="text" id="kh" class="team-in" placeholder="npr. Brazil"></div>
+        <div class="form-group"><label>Gost</label><input type="text" id="ka" class="team-in" placeholder="npr. Hrvatska"></div>
+        <div class="form-group"><label>Moj tip</label>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" id="kph" class="score-in" min="0" max="99" placeholder="0">
+            <span class="colon">:</span>
+            <input type="number" id="kpa" class="score-in" min="0" max="99" placeholder="0">
+          </div>
+        </div>
+        <div class="form-group"><label>Stvarni rezultat</label>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" id="krh" class="score-in" min="0" max="99" placeholder="0">
+            <span class="colon">:</span>
+            <input type="number" id="kra" class="score-in" min="0" max="99" placeholder="0">
+          </div>
+        </div>
+        <button class="btn btn-add" onclick="addMatch('dinko')">Dodaj</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-export" onclick="exportCSV('dinko')">⬇ Izvezi CSV</button>
+      <button class="btn btn-clear" onclick="clearAll('dinko')">🗑 Obriši sve</button>
+    </div>
+    <div class="table-wrap">
+      <table><colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"><col class="c-del"></colgroup><thead><tr>
+        <th>#</th><th>Utakmica</th><th>Moj tip</th><th>Stvarni rezultat</th><th>Bodovi</th><th>Komentar</th><th></th>
+      </tr></thead>
+      <tbody id="tbody-dinko"></tbody></table>
+      <div class="empty-msg" id="empty-dinko" style="display:none">Još nema utakmica ☝</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DRAZEN_KEY = 'tipping_drazen_v2';
+const DINKO_KEY  = 'tipping_dinko_v2';
+
+const DRAZEN_DEFAULT = /*DRAZEN_START*/[
+  {h:'Meksiko',a:'JAR',ph:2,pa:0,rh:2,ra:0},
+  {h:'Južna Koreja',a:'Češka',ph:0,pa:1,rh:2,ra:1},
+  {h:'Kanada',a:'BiH',ph:2,pa:0,rh:1,ra:1},
+  {h:'SAD',a:'Paragvaj',ph:2,pa:1,rh:4,ra:1},
+  {h:'Katar',a:'Švicarska',ph:0,pa:2,rh:1,ra:1},
+  {h:'Brazil',a:'Maroko',ph:2,pa:0,rh:1,ra:1},
+  {h:'Haiti',a:'Škotska',ph:0,pa:2,rh:0,ra:1},
+  {h:'Australija',a:'Turska',ph:0,pa:1,rh:2,ra:0},
+  {h:'Njemačka',a:'Curacao',ph:5,pa:0,rh:7,ra:1},
+  {h:'Nizozemska',a:'Japan',ph:2,pa:1,rh:2,ra:2},
+  {h:'Obala Bjelokosti',a:'Ekvador',ph:1,pa:1,rh:1,ra:0},
+  {h:'Švedska',a:'Tunis',ph:1,pa:0,rh:5,ra:1},
+  {h:'Španjolska',a:'Zelenortska Rep.',ph:4,pa:0,rh:0,ra:0},
+  {h:'Belgija',a:'Egipat',ph:1,pa:1,rh:1,ra:1},
+  {h:'Saudijska Arabija',a:'Urugvaj',ph:0,pa:1,rh:1,ra:1},
+  {h:'Iran',a:'Novi Zeland',ph:1,pa:0,rh:2,ra:2},
+  {h:'Francuska',a:'Senegal',ph:2,pa:0,rh:3,ra:1},
+  {h:'Irak',a:'Norveška',ph:0,pa:2,rh:1,ra:4},
+  {h:'Argentina',a:'Alžir',ph:2,pa:0,rh:3,ra:0},
+  {h:'Austrija',a:'Jordan',ph:1,pa:0,rh:3,ra:1},
+  {h:'Portugal',a:'DR Kongo',ph:2,pa:0,rh:1,ra:1},
+  {h:'Engleska',a:'Hrvatska',ph:2,pa:0,rh:4,ra:2},
+  {h:'Gana',a:'Panama',ph:1,pa:0,rh:1,ra:0},
+  {h:'Uzbekistan',a:'Kolumbija',ph:0,pa:2,rh:1,ra:3},
+]/*DRAZEN_END*/;
+
+const DINKO_DEFAULT = /*DINKO_START*/[
+  {h:'Meksiko',a:'JAR',ph:1,pa:0,rh:2,ra:0},
+  {h:'Južna Koreja',a:'Češka',ph:0,pa:0,rh:2,ra:1},
+  {h:'Kanada',a:'BiH',ph:1,pa:1,rh:1,ra:1},
+  {h:'SAD',a:'Paragvaj',ph:1,pa:0,rh:4,ra:1},
+  {h:'Katar',a:'Švicarska',ph:0,pa:2,rh:1,ra:1},
+  {h:'Brazil',a:'Maroko',ph:2,pa:0,rh:1,ra:1},
+  {h:'Haiti',a:'Škotska',ph:0,pa:2,rh:0,ra:1},
+  {h:'Australija',a:'Turska',ph:0,pa:3,rh:2,ra:0},
+  {h:'Njemačka',a:'Curacao',ph:3,pa:0,rh:7,ra:1},
+  {h:'Nizozemska',a:'Japan',ph:2,pa:1,rh:2,ra:2},
+  {h:'Obala Bjelokosti',a:'Ekvador',ph:1,pa:0,rh:1,ra:0},
+  {h:'Švedska',a:'Tunis',ph:1,pa:1,rh:5,ra:1},
+  {h:'Španjolska',a:'Zelenortska Rep.',ph:4,pa:0,rh:0,ra:0},
+  {h:'Belgija',a:'Egipat',ph:2,pa:1,rh:1,ra:1},
+  {h:'Saudijska Arabija',a:'Urugvaj',ph:0,pa:2,rh:1,ra:1},
+  {h:'Iran',a:'Novi Zeland',ph:1,pa:1,rh:2,ra:2},
+  {h:'Francuska',a:'Senegal',ph:3,pa:1,rh:3,ra:1},
+  {h:'Irak',a:'Norveška',ph:0,pa:2,rh:1,ra:4},
+  {h:'Argentina',a:'Alžir',ph:3,pa:1,rh:3,ra:0},
+  {h:'Austrija',a:'Jordan',ph:3,pa:0,rh:3,ra:1},
+  {h:'Portugal',a:'DR Kongo',ph:3,pa:0,rh:1,ra:1},
+  {h:'Engleska',a:'Hrvatska',ph:0,pa:0,rh:4,ra:2},
+  {h:'Gana',a:'Panama',ph:3,pa:0,rh:1,ra:0},
+  {h:'Uzbekistan',a:'Kolumbija',ph:0,pa:3,rh:1,ra:3},
+]/*DINKO_END*/;
+
+let data = { drazen: [], dinko: [] };
+let currentTab = 'drazen';
+
+function calcPoints(m) {
+  const {ph,pa,rh,ra} = m;
+  if (ph===rh && pa===ra) return {pts:3, reason:'Točan rezultat ✓'};
+  const pW = Math.sign(ph-pa), rW = Math.sign(rh-ra);
+  if (pW !== rW) return {pts:0, reason:'Pogrešan ishod'};
+  if ((ph-pa) === (rh-ra)) return {pts:2, reason:'Točna razlika golova'};
+  return {pts:1, reason:'Točan pobjednik/ishod'};
+}
+
+function load() {
+  const sd = localStorage.getItem(DRAZEN_KEY);
+  const sk = localStorage.getItem(DINKO_KEY);
+  data.drazen = sd ? JSON.parse(sd) : DRAZEN_DEFAULT.map((m,i)=>({id:i+1,...m}));
+  data.dinko  = sk ? JSON.parse(sk)  : DINKO_DEFAULT.map((m,i)=>({id:i+1,...m}));
+  if (!sd) save('drazen');
+  if (!sk) save('dinko');
+  render('drazen');
+  render('dinko');
+}
+
+function save(player) {
+  localStorage.setItem(player==='drazen'?DRAZEN_KEY:DINKO_KEY, JSON.stringify(data[player]));
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  ['drazen','dinko'].forEach(p => {
+    document.getElementById('panel-'+p).style.display = p===tab ? '' : 'none';
+    document.getElementById('tab-'+p).classList.toggle('active', p===tab);
+  });
+}
+
+function render(player) {
+  const p  = player==='drazen' ? 'd' : 'k';
+  const matches = data[player];
+  const tbody = document.getElementById('tbody-'+player);
+  const empty  = document.getElementById('empty-'+player);
+
+  const results = matches.map(m=>({...m,...calcPoints(m)}));
+  const total   = results.reduce((s,r)=>s+r.pts,0);
+  const exact   = results.filter(r=>r.pts===3).length;
+  const diff    = results.filter(r=>r.pts===2).length;
+  const outcome = results.filter(r=>r.pts===1).length;
+
+  document.getElementById(p+'-total').textContent   = total;
+  document.getElementById(p+'-exact').textContent   = exact;
+  document.getElementById(p+'-diff').textContent    = diff;
+  document.getElementById(p+'-outcome').textContent = outcome;
+  document.getElementById(p+'-matches').textContent = matches.length;
+  document.getElementById(p+'-exact-lbl').textContent   = 'Točan rezultat (3b)';
+  document.getElementById(p+'-diff-lbl').textContent    = 'Točna razlika (2b)';
+  document.getElementById(p+'-outcome-lbl').textContent = 'Točan ishod (1b)';
+  document.getElementById(p+'-exact').innerHTML   = `${exact} <span class="sub-pts">(${exact*3}b)</span>`;
+  document.getElementById(p+'-diff').innerHTML    = `${diff} <span class="sub-pts">(${diff*2}b)</span>`;
+  document.getElementById(p+'-outcome').innerHTML = `${outcome} <span class="sub-pts">(${outcome}b)</span>`;
+
+  // update pills & leaderboard
+  document.getElementById('pill-'+player).textContent = total;
+  document.getElementById('lead-pts-'+player).textContent = total;
+  updateLeaderboard();
+
+  if (!matches.length) {
+    tbody.innerHTML=''; empty.style.display='block'; return;
+  }
+  empty.style.display='none';
+
+  tbody.innerHTML = results.map((m,i)=>{
+    const exact = m.pts===3;
+    return `<tr>
+      <td style="color:#94a3b8;font-size:12px">${i+1}</td>
+      <td class="teams">${m.h} – ${m.a}${exact?'<span class="exact-tag">TOČAN ✓</span>':''}</td>
+      <td class="score">${m.ph}:${m.pa}</td>
+      <td class="score actual">${m.rh}:${m.ra}</td>
+      <td><span class="badge b${m.pts}">${m.pts}</span></td>
+      <td class="reason">${m.reason}</td>
+      <td><button class="del-btn" onclick="deleteMatch('${player}',${m.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateLeaderboard() {
+  const dPts = +document.getElementById('d-total').textContent;
+  const kPts = +document.getElementById('k-total').textContent;
+  const winner = document.getElementById('lead-winner');
+  const ldD = document.getElementById('lead-drazen');
+  const ldK = document.getElementById('lead-dinko');
+  ldD.style.fontWeight = dPts >= kPts ? '700' : '400';
+  ldK.style.fontWeight = kPts >= dPts ? '700' : '400';
+  if (dPts === kPts) winner.textContent = '🤝 Izjednačeno!';
+  else if (dPts > kPts) winner.textContent = `🏆 Dražen vodi za ${dPts-kPts} bod${dPts-kPts===1?'':'ova'}`;
+  else winner.textContent = `🏆 Dinko vodi za ${kPts-dPts} bod${kPts-dPts===1?'':'ova'}`;
+}
+
+function addMatch(player) {
+  const pre = player==='drazen' ? 'd' : 'k';
+  const h  = document.getElementById(pre+'h').value.trim();
+  const a  = document.getElementById(pre+'a').value.trim();
+  const ph = parseInt(document.getElementById(pre+'ph').value);
+  const pa = parseInt(document.getElementById(pre+'pa').value);
+  const rh = parseInt(document.getElementById(pre+'rh').value);
+  const ra = parseInt(document.getElementById(pre+'ra').value);
+  if (!h||!a) { alert('Upiši nazive momčadi.'); return; }
+  if ([ph,pa,rh,ra].some(isNaN)) { alert('Upiši sve rezultate.'); return; }
+  data[player].push({id:Date.now(),h,a,ph,pa,rh,ra});
+  save(player);
+  render(player);
+  [pre+'h',pre+'a',pre+'ph',pre+'pa',pre+'rh',pre+'ra'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById(pre+'h').focus();
+}
+
+function deleteMatch(player, id) {
+  data[player] = data[player].filter(m=>m.id!==id);
+  save(player); render(player);
+}
+
+function clearAll(player) {
+  if (!confirm('Obrisati sve utakmice?')) return;
+  data[player]=[];
+  save(player); render(player);
+}
+
+function exportCSV(player) {
+  const name = player==='drazen'?'Dražen':'Dinko';
+  const results = data[player].map(m=>({...m,...calcPoints(m)}));
+  let csv=`#,Utakmica,${name} tip,Stvarni rezultat,Bodovi,Komentar\n`;
+  results.forEach((m,i)=>{
+    csv+=`${i+1},"${m.h} - ${m.a}","${m.ph}:${m.pa}","${m.rh}:${m.ra}",${m.pts},"${m.reason}"\n`;
+  });
+  csv+=`\nUkupno bodova:,${results.reduce((s,r)=>s+r.pts,0)}`;
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`tipping_${player}.csv`; a.click();
+}
+
+function saveAsHTML() {
+  const src = document.documentElement.outerHTML;
+
+  function serializeMatches(matches) {
+    return '[\n' + matches.map(m =>
+      `  {h:${JSON.stringify(m.h)},a:${JSON.stringify(m.a)},ph:${m.ph},pa:${m.pa},rh:${m.rh},ra:${m.ra}}`
+    ).join(',\n') + '\n]';
+  }
+
+  let out = src;
+  out = out.replace(/\/\*DRAZEN_START\*\/[\s\S]*?\/\*DRAZEN_END\*\//,
+    `/*DRAZEN_START*/${serializeMatches(data.drazen)}/*DRAZEN_END*/`);
+  out = out.replace(/\/\*DINKO_START\*\/[\s\S]*?\/\*DINKO_END\*\//,
+    `/*DINKO_START*/${serializeMatches(data.dinko)}/*DINKO_END*/`);
+
+  const blob = new Blob([out], {type:'text/html;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'tipping.html'; a.click();
+  URL.revokeObjectURL(url);
+
+  const btn = document.getElementById('save-btn');
+  btn.textContent = '✓ Spremljeno!';
+  btn.style.background = '#dcfce7';
+  btn.style.color = '#15803d';
+  setTimeout(() => { btn.textContent = '💾 Spremi datoteku'; btn.style.background=''; btn.style.color=''; }, 2500);
+}
+
+document.addEventListener('keydown', e=>{
+  const ids = currentTab==='drazen'
+    ? ['dh','da','dph','dpa','drh','dra']
+    : ['kh','ka','kph','kpa','krh','kra'];
+  if (e.key==='Enter' && ids.includes(e.target.id)) addMatch(currentTab);
+});
+
+load();
+</script>
+</body>
+</html>
