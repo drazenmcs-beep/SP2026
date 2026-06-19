@@ -480,8 +480,12 @@
 </div>
 
 <script>
-const PIN_HASH = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481';
+const PIN_HASH_ADMIN    = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'; // 1212
+const PIN_HASH_READONLY = 'dbff5341acad5e2a58db4efd5e72e2d9a0a843a28e02b1183c68162d0a3a3de6'; // 9876
 let pinInput = '';
+
+function isAdmin() { return sessionStorage.getItem('pin_ok') === 'admin'; }
+function isReadonly() { return sessionStorage.getItem('pin_ok') === 'readonly'; }
 
 async function hashString(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -501,9 +505,9 @@ function pinDel() {
 }
 async function checkPin() {
   const h = await hashString(pinInput);
-  if (h === PIN_HASH) {
+  if (h === PIN_HASH_ADMIN || h === PIN_HASH_READONLY) {
     document.getElementById('pin-overlay').style.display = 'none';
-    sessionStorage.setItem('pin_ok', '1');
+    sessionStorage.setItem('pin_ok', h === PIN_HASH_ADMIN ? 'admin' : 'readonly');
     load();
   } else {
     document.getElementById('pin-error').textContent = 'Pogrešan PIN. Pokušaj ponovo.';
@@ -511,7 +515,7 @@ async function checkPin() {
     for (let i = 0; i < 4; i++) document.getElementById('dot-' + i).classList.remove('filled');
   }
 }
-if (sessionStorage.getItem('pin_ok') === '1') {
+if (sessionStorage.getItem('pin_ok') === 'admin' || sessionStorage.getItem('pin_ok') === 'readonly') {
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pin-overlay').style.display = 'none';
     load();
@@ -573,6 +577,24 @@ async function load() {
   renderMatches();
   renderPlayer('drazen');
   renderPlayer('dinko');
+  applyAccessLevel();
+}
+
+function applyAccessLevel() {
+  const ro = isReadonly();
+  // GitHub save + token reset — sakrij za readonly
+  document.getElementById('gh-save-btn').style.display = ro ? 'none' : '';
+  document.querySelector('button[onclick="resetGHToken()"]').style.display = ro ? 'none' : '';
+  // Dodaj utakmicu sekcija
+  document.querySelector('.add-section').style.display = ro ? 'none' : '';
+  // Obriši sve + CSV ostaje vidljiv, ali Obriši sakrijemo
+  document.querySelector('.btn-clear').style.display = ro ? 'none' : '';
+  // Score inputi u tablici utakmica — readonly
+  if (ro) {
+    document.querySelectorAll('.score-in-sm').forEach(el => el.disabled = true);
+    document.querySelectorAll('.del-btn').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tip-input').forEach(el => el.disabled = true);
+  }
 }
 
 function switchTab(tab) {
@@ -607,6 +629,10 @@ function renderMatches() {
       <td><button class="del-btn" onclick="deleteMatch(${m.id})">✕</button></td>
     </tr>`;
   }).join('');
+  if (isReadonly()) {
+    tbody.querySelectorAll('.score-in-sm').forEach(el => el.disabled = true);
+    tbody.querySelectorAll('.del-btn').forEach(el => el.style.display = 'none');
+  }
 }
 
 function renderPlayer(player) {
@@ -655,6 +681,9 @@ function renderPlayer(player) {
       <td class="reason">${m.reason}</td>
     </tr>`;
   }).join('');
+  if (isReadonly()) {
+    tbody.querySelectorAll('.tip-input').forEach(el => el.disabled = true);
+  }
 }
 
 function updateLeaderboard() {
