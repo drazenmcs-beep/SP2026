@@ -758,17 +758,16 @@ async function doGitHubSave(token) {
   btn.textContent = '⏳ Sprema...';
   btn.disabled = true;
   try {
-    // Dohvati SHA od data.json
+    // Dohvati SHA od data.json (ili null ako ne postoji — tada ga kreiramo)
     const getRes = await fetch(
       `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`,
       { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } }
     ).catch(() => { throw new Error('Mrežna greška — provjeri vezu ili token (klikni ⚙).'); });
-    if (!getRes.ok) {
+    if (!getRes.ok && getRes.status !== 404) {
       if (getRes.status === 401) { localStorage.removeItem('gh_pat'); throw new Error('Pogrešan token. Klikni ⚙ i upiši novi.'); }
-      if (getRes.status === 404) throw new Error('data.json nije pronađen na GitHubu. Prvo ga ručno uploadaj.');
       throw new Error(`GitHub greška ${getRes.status}`);
     }
-    const { sha } = await getRes.json();
+    const sha = getRes.ok ? (await getRes.json()).sha : null;
 
     // Spremi samo data.json — mali JSON, bez HTML-a
     const jsonStr = JSON.stringify(data, null, 2);
@@ -783,10 +782,10 @@ async function doGitHubSave(token) {
           'Accept': 'application/vnd.github.v3+json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
+        body: JSON.stringify(Object.assign({
           message: 'Ažurirani podaci — ' + new Date().toLocaleDateString('hr'),
-          content: b64, sha, branch: GH_BRANCH
-        })
+          content: b64, branch: GH_BRANCH
+        }, sha ? { sha } : {}))
       }
     );
     if (!putRes.ok) {
