@@ -23,17 +23,13 @@
   .tabs-bar {
     background: #fff; border-bottom: 1px solid #e2e8f0;
     display: flex; gap: 0; padding: 0 24px;
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
   }
-  .tabs-bar::-webkit-scrollbar { display: none; }
   .tab-btn {
     padding: 14px 22px; border: none; background: none;
     font-size: 14px; font-weight: 600; color: #64748b;
     cursor: pointer; border-bottom: 3px solid transparent;
     transition: color .15s, border-color .15s;
     display: flex; align-items: center; gap: 8px;
-    white-space: nowrap; flex-shrink: 0;
   }
   .tab-btn:hover { color: #1e293b; }
   .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
@@ -220,8 +216,10 @@
     header > div:last-child { gap: 4px; }
     #save-btn { font-size: 11px; padding: 8px 8px; }
     #gh-save-btn { font-size: 11px; padding: 8px 8px; white-space: nowrap; }
-    .tab-btn { padding: 10px 12px; font-size: 12px; gap: 4px; }
-    .tabs-bar { padding: 0 4px; }
+    .tabs-bar { padding: 0; overflow: hidden; }
+    .tab-btn { flex: 1; min-width: 0; padding: 10px 2px; font-size: 11px; gap: 2px; justify-content: center; }
+    .tab-icon { display: none; }
+    .tab-pill { font-size: 10px; padding: 1px 5px; min-width: 18px; }
     .summary { padding: 10px 12px; gap: 6px; }
     .stat-card { min-width: calc(50% - 3px); padding: 10px 10px; }
     .stat-card .val { font-size: 20px; }
@@ -381,19 +379,19 @@
 
 <div class="tabs-bar">
   <button class="tab-btn active" onclick="switchTab('utakmice')" id="tab-utakmice">
-    📋 Utakmice <span class="tab-pill" id="pill-utakmice">0</span>
+    <span class="tab-icon">📋 </span>Utakmice <span class="tab-pill" id="pill-utakmice">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('drazen')" id="tab-drazen">
-    🟦 Dražen <span class="tab-pill" id="pill-drazen">0</span>
+    <span class="tab-icon">🟦 </span>Dražen <span class="tab-pill" id="pill-drazen">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('dinko')" id="tab-dinko">
-    🟥 Dinko <span class="tab-pill" id="pill-dinko">0</span>
+    <span class="tab-icon">🟥 </span>Dinko <span class="tab-pill" id="pill-dinko">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('matej')" id="tab-matej">
-    🟩 Matej <span class="tab-pill" id="pill-matej">0</span>
+    <span class="tab-icon">🟩 </span>Matej <span class="tab-pill" id="pill-matej">0</span>
   </button>
   <button class="tab-btn" onclick="switchTab('nikola')" id="tab-nikola">
-    🟨 Nikola <span class="tab-pill" id="pill-nikola">0</span>
+    <span class="tab-icon">🟨 </span>Nikola <span class="tab-pill" id="pill-nikola">0</span>
   </button>
 </div>
 
