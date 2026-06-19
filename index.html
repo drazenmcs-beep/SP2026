@@ -562,9 +562,9 @@ async function load() {
       { cache: 'no-store', headers: { 'Accept': 'application/vnd.github.v3+json' } }
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const meta = await res.json();
-    const bytes = Uint8Array.from(atob(meta.content.replace(/\s/g, '')), c => c.charCodeAt(0));
-    data = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    const { download_url } = await res.json();
+    const raw = await fetch(download_url + '&_nc=' + Date.now(), { cache: 'no-store' });
+    data = await raw.json();
     saveLocalCache();
   } catch(e) {
     loadLocalCache();
