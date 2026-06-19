@@ -271,9 +271,52 @@
       display: block; font-size: 11px; color: #94a3b8; margin-top: 4px;
     }
   }
+
+  /* Token modal */
+  #token-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.45); z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+  #token-modal-overlay.open { display: flex; }
+  #token-modal {
+    background: #fff; border-radius: 16px; padding: 28px 28px 24px;
+    width: 380px; max-width: 95vw;
+    box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  }
+  #token-modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  #token-modal p { font-size: 13px; color: #64748b; margin-bottom: 16px; line-height: 1.5; }
+  #token-modal input {
+    width: 100%; border: 1px solid #cbd5e1; border-radius: 8px;
+    padding: 10px 12px; font-size: 13px; font-family: monospace;
+    outline: none; margin-bottom: 14px;
+  }
+  #token-modal input:focus { border-color: #2563eb; }
+  #token-modal .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+  #token-modal .modal-btns button {
+    padding: 8px 18px; border-radius: 8px; font-size: 13px;
+    font-weight: 600; cursor: pointer; border: none;
+  }
+  #token-modal-cancel { background: #f1f5f9; color: #475569; }
+  #token-modal-ok { background: #1d4ed8; color: #fff; }
 </style>
 </head>
 <body>
+
+<!-- GitHub Token Modal -->
+<div id="token-modal-overlay">
+  <div id="token-modal">
+    <h3>🔑 GitHub Personal Access Token</h3>
+    <p>Token se pohranjuje samo u ovom browseru (localStorage) — nikad u HTML datoteci.<br>
+       Generiraj ga na <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> s dozvolom <strong>Contents: Read & write</strong> za repozitorij SP2026.</p>
+    <input type="password" id="token-modal-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off"
+      onkeydown="if(event.key==='Enter')confirmToken()">
+    <div class="modal-btns">
+      <button id="token-modal-cancel" onclick="closeTokenModal()">Odustani</button>
+      <button id="token-modal-ok" onclick="confirmToken()">Spremi i objavi</button>
+    </div>
+  </div>
+</div>
 
 <div id="pin-overlay">
   <div id="pin-box">
@@ -815,26 +858,54 @@ function saveAsHTML() {
   setTimeout(() => { btn.textContent = orig; btn.style.background=''; btn.style.color=''; }, 2000);
 }
 
+let _pendingGitHubSave = false;
+
+function openTokenModal() {
+  document.getElementById('token-modal-input').value = '';
+  document.getElementById('token-modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('token-modal-input').focus(), 100);
+}
+function closeTokenModal() {
+  document.getElementById('token-modal-overlay').classList.remove('open');
+  _pendingGitHubSave = false;
+  const btn = document.getElementById('gh-save-btn');
+  btn.textContent = '☁️ Spremi na GitHub';
+  btn.disabled = false;
+}
+function confirmToken() {
+  const val = document.getElementById('token-modal-input').value.trim().replace(/[\r\n\s]/g, '');
+  if (!val) { document.getElementById('token-modal-input').focus(); return; }
+  localStorage.setItem('gh_pat', val);
+  document.getElementById('token-modal-overlay').classList.remove('open');
+  if (_pendingGitHubSave) { _pendingGitHubSave = false; doGitHubSave(val); }
+}
+
 async function saveToGitHub() {
   const btn = document.getElementById('gh-save-btn');
   let token = localStorage.getItem('gh_pat');
   // Uvijek očisti token od whitespace-a
   if (token) token = token.trim().replace(/[\r\n\s]/g, '');
   if (!token) {
-    token = prompt('Upiši GitHub Personal Access Token\n(pohranit će se samo u ovom browseru, ne u HTML datoteci):');
-    if (!token) return;
-    token = token.trim().replace(/[\r\n\s]/g, '');
-    localStorage.setItem('gh_pat', token);
+    _pendingGitHubSave = true;
+    btn.textContent = '⏳ Čeka token...';
+    btn.disabled = true;
+    openTokenModal();
+    return;
   }
-  const origText = btn.textContent;
+  doGitHubSave(token);
+}
+
+async function doGitHubSave(token) {
+  const btn = document.getElementById('gh-save-btn');
+  const origText = '☁️ Spremi na GitHub';
   btn.textContent = '⏳ Sprema...';
   btn.disabled = true;
   try {
     // Dohvati SHA trenutne datoteke (cache-bust da dobijemo svježi SHA)
     const getRes = await fetch(
       `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`,
-      { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Cache-Control': 'no-cache' } }
-    ).catch(e => { throw new Error('Mrežna greška — provjeri internetsku vezu.\nAko se problem ponavlja, klikni ⚙ da resetiraš token.'); });
+      { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } }
+    ).catch(e => { throw new Error('Mrežna greška — provjeri internetsku vezu.\nAko se problem ponavlja, klikni ⚙ da resetiraš token i upiši ga ponovo.'); });
     if (!getRes.ok) {
       if (getRes.status === 401) { localStorage.removeItem('gh_pat'); throw new Error('Pogrešan token. Klikni ⚙ i upiši novi ispravan token.'); }
       if (getRes.status === 404) throw new Error('Repozitorij ili datoteka nije pronađena. Provjeri GH_OWNER/GH_REPO/GH_FILE u kodu.');
