@@ -98,12 +98,12 @@
   #panel-utakmice col.c-del    { width: 36px; }
 
   /* Player tables — auto layout so Utakmica column fills available space */
-  #panel-drazen table, #panel-dinko table { table-layout: auto; }
-  #panel-drazen col.c-num, #panel-dinko col.c-num       { width: 36px; }
-  #panel-drazen col.c-tip, #panel-dinko col.c-tip       { width: 76px; }
-  #panel-drazen col.c-actual, #panel-dinko col.c-actual { width: 130px; }
-  #panel-drazen col.c-pts, #panel-dinko col.c-pts       { width: 76px; }
-  #panel-drazen col.c-reason, #panel-dinko col.c-reason { width: 160px; }
+  #panel-drazen table, #panel-dinko table, #panel-matej table, #panel-nikola table { table-layout: auto; }
+  #panel-drazen col.c-num, #panel-dinko col.c-num, #panel-matej col.c-num, #panel-nikola col.c-num       { width: 36px; }
+  #panel-drazen col.c-tip, #panel-dinko col.c-tip, #panel-matej col.c-tip, #panel-nikola col.c-tip       { width: 76px; }
+  #panel-drazen col.c-actual, #panel-dinko col.c-actual, #panel-matej col.c-actual, #panel-nikola col.c-actual { width: 130px; }
+  #panel-drazen col.c-pts, #panel-dinko col.c-pts, #panel-matej col.c-pts, #panel-nikola col.c-pts       { width: 76px; }
+  #panel-drazen col.c-reason, #panel-dinko col.c-reason, #panel-matej col.c-reason, #panel-nikola col.c-reason { width: 160px; }
 
   thead tr { background: #f8fafc; }
   thead th {
@@ -253,24 +253,24 @@
     }
 
     /* Player panels */
-    #panel-drazen tbody tr, #panel-dinko tbody tr { padding: 10px 44px 10px 12px; }
-    #panel-drazen td:nth-child(3), #panel-dinko td:nth-child(3) {
+    #panel-drazen tbody tr, #panel-dinko tbody tr, #panel-matej tbody tr, #panel-nikola tbody tr { padding: 10px 44px 10px 12px; }
+    #panel-drazen td:nth-child(3), #panel-dinko td:nth-child(3), #panel-matej td:nth-child(3), #panel-nikola td:nth-child(3) {
       display: flex; align-items: center; gap: 6px; margin-top: 2px;
     }
-    #panel-drazen td:nth-child(3)::before, #panel-dinko td:nth-child(3)::before {
+    #panel-drazen td:nth-child(3)::before, #panel-dinko td:nth-child(3)::before, #panel-matej td:nth-child(3)::before, #panel-nikola td:nth-child(3)::before {
       content: 'Tip:'; font-size: 11px; color: #94a3b8; white-space: nowrap; flex: none;
     }
-    #panel-drazen .tip-input, #panel-dinko .tip-input { width: 42px; }
-    #panel-drazen td:nth-child(4), #panel-dinko td:nth-child(4) {
+    #panel-drazen .tip-input, #panel-dinko .tip-input, #panel-matej .tip-input, #panel-nikola .tip-input { width: 42px; }
+    #panel-drazen td:nth-child(4), #panel-dinko td:nth-child(4), #panel-matej td:nth-child(4), #panel-nikola td:nth-child(4) {
       display: flex; align-items: center; gap: 4px; margin-top: 2px;
     }
-    #panel-drazen td:nth-child(4)::before, #panel-dinko td:nth-child(4)::before {
+    #panel-drazen td:nth-child(4)::before, #panel-dinko td:nth-child(4)::before, #panel-matej td:nth-child(4)::before, #panel-nikola td:nth-child(4)::before {
       content: 'Rezultat:'; font-size: 11px; color: #94a3b8; white-space: nowrap; flex: none;
     }
-    #panel-drazen td:nth-child(5), #panel-dinko td:nth-child(5) {
+    #panel-drazen td:nth-child(5), #panel-dinko td:nth-child(5), #panel-matej td:nth-child(5), #panel-nikola td:nth-child(5) {
       position: absolute; top: 10px; right: 8px;
     }
-    #panel-drazen td:nth-child(6), #panel-dinko td:nth-child(6) {
+    #panel-drazen td:nth-child(6), #panel-dinko td:nth-child(6), #panel-matej td:nth-child(6), #panel-nikola td:nth-child(6) {
       display: block; font-size: 11px; color: #94a3b8; margin-top: 4px;
     }
   }
@@ -382,6 +382,12 @@
   <button class="tab-btn" onclick="switchTab('dinko')" id="tab-dinko">
     🟥 Dinko <span class="tab-pill" id="pill-dinko">0</span>
   </button>
+  <button class="tab-btn" onclick="switchTab('matej')" id="tab-matej">
+    🟩 Matej <span class="tab-pill" id="pill-matej">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('nikola')" id="tab-nikola">
+    🟨 Nikola <span class="tab-pill" id="pill-nikola">0</span>
+  </button>
 </div>
 
 <div style="padding: 14px 24px 0">
@@ -395,6 +401,16 @@
     <div class="leader-item" id="lead-dinko">
       <span>🟥 Dinko</span>
       <span class="pts c-slate" id="lead-pts-dinko">0</span>
+      <span style="font-size:12px;color:#94a3b8">bod.</span>
+    </div>
+    <div class="leader-item" id="lead-matej">
+      <span>🟩 Matej</span>
+      <span class="pts c-green" id="lead-pts-matej">0</span>
+      <span style="font-size:12px;color:#94a3b8">bod.</span>
+    </div>
+    <div class="leader-item" id="lead-nikola">
+      <span>🟨 Nikola</span>
+      <span class="pts c-amber" id="lead-pts-nikola">0</span>
       <span style="font-size:12px;color:#94a3b8">bod.</span>
     </div>
     <div id="lead-winner" style="font-size:13px;color:#64748b;margin-left:auto"></div>
@@ -479,6 +495,50 @@
   </div>
 </div>
 
+<!-- PANEL: Matej -->
+<div id="panel-matej" style="display:none">
+  <div class="summary">
+    <div class="stat-card"><div class="val c-blue" id="m-total">0</div><div class="lbl">Ukupno bodova</div></div>
+    <div class="stat-card"><div class="val c-green" id="m-exact">0</div><div class="lbl" id="m-exact-lbl">Točan rezultat (3b)</div></div>
+    <div class="stat-card"><div class="val c-indigo" id="m-diff">0</div><div class="lbl" id="m-diff-lbl">Točna razlika (2b)</div></div>
+    <div class="stat-card"><div class="val c-amber" id="m-outcome">0</div><div class="lbl" id="m-outcome-lbl">Točan ishod (1b)</div></div>
+    <div class="stat-card"><div class="val" id="m-zero" style="color:#ef4444">0</div><div class="lbl">Utakmica bez bodova</div></div>
+    <div class="stat-card"><div class="val c-slate" id="m-matches">0</div><div class="lbl">Utakmica</div></div>
+  </div>
+  <div class="container">
+    <div class="table-wrap">
+      <table>
+        <colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"></colgroup>
+        <thead><tr><th>#</th><th>Utakmica</th><th>Moj tip</th><th>Stvarni rezultat</th><th>Bodovi</th><th>Komentar</th></tr></thead>
+        <tbody id="tbody-matej"></tbody>
+      </table>
+      <div class="empty-msg" id="empty-matej" style="display:none">Dodaj utakmice u kartici „Utakmice" ☝</div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: Nikola -->
+<div id="panel-nikola" style="display:none">
+  <div class="summary">
+    <div class="stat-card"><div class="val c-blue" id="n-total">0</div><div class="lbl">Ukupno bodova</div></div>
+    <div class="stat-card"><div class="val c-green" id="n-exact">0</div><div class="lbl" id="n-exact-lbl">Točan rezultat (3b)</div></div>
+    <div class="stat-card"><div class="val c-indigo" id="n-diff">0</div><div class="lbl" id="n-diff-lbl">Točna razlika (2b)</div></div>
+    <div class="stat-card"><div class="val c-amber" id="n-outcome">0</div><div class="lbl" id="n-outcome-lbl">Točan ishod (1b)</div></div>
+    <div class="stat-card"><div class="val" id="n-zero" style="color:#ef4444">0</div><div class="lbl">Utakmica bez bodova</div></div>
+    <div class="stat-card"><div class="val c-slate" id="n-matches">0</div><div class="lbl">Utakmica</div></div>
+  </div>
+  <div class="container">
+    <div class="table-wrap">
+      <table>
+        <colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"></colgroup>
+        <thead><tr><th>#</th><th>Utakmica</th><th>Moj tip</th><th>Stvarni rezultat</th><th>Bodovi</th><th>Komentar</th></tr></thead>
+        <tbody id="tbody-nikola"></tbody>
+      </table>
+      <div class="empty-msg" id="empty-nikola" style="display:none">Dodaj utakmice u kartici „Utakmice" ☝</div>
+    </div>
+  </div>
+</div>
+
 <script>
 const PIN_HASH_ADMIN    = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'; // 1212
 const PIN_HASH_READONLY = 'dbff5341acad5e2a58db4efd5e72e2d9a0a843a28e02b1183c68162d0a3a3de6'; // 9876
@@ -528,7 +588,8 @@ const GH_REPO      = 'SP2026';
 const GH_BRANCH    = 'main';
 const GH_DATA_FILE = 'data.json';
 
-let data = { matches: [], tips: { drazen: {}, dinko: {} } };
+const PLAYERS = ['drazen','dinko','matej','nikola'];
+let data = { matches: [], tips: { drazen: {}, dinko: {}, matej: {}, nikola: {} } };
 let currentTab = 'utakmice';
 
 function calcPoints(match, tip) {
@@ -575,8 +636,7 @@ async function load() {
   }
   document.getElementById('loading-overlay').style.display = 'none';
   renderMatches();
-  renderPlayer('drazen');
-  renderPlayer('dinko');
+  PLAYERS.forEach(p => renderPlayer(p));
   applyAccessLevel();
 }
 
@@ -599,7 +659,7 @@ function applyAccessLevel() {
 
 function switchTab(tab) {
   currentTab = tab;
-  ['utakmice','drazen','dinko'].forEach(p => {
+  ['utakmice',...PLAYERS].forEach(p => {
     document.getElementById('panel-'+p).style.display = p===tab ? '' : 'none';
     document.getElementById('tab-'+p).classList.toggle('active', p===tab);
   });
@@ -636,11 +696,14 @@ function renderMatches() {
 }
 
 function renderPlayer(player) {
-  const p = player === 'drazen' ? 'd' : 'k';
+  const prefixMap = { drazen: 'd', dinko: 'k', matej: 'm', nikola: 'n' };
+  const p = prefixMap[player];
   const tbody = document.getElementById('tbody-'+player);
   const empty  = document.getElementById('empty-'+player);
   if (!data.matches.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
   empty.style.display = 'none';
+  // Obrambena inicijalizacija — ako data.json ne sadrži igrača (stara verzija)
+  if (!data.tips[player]) data.tips[player] = {};
 
   const rows = data.matches.map(m => {
     const tip  = data.tips[player][String(m.id)] || null;
@@ -687,14 +750,25 @@ function renderPlayer(player) {
 }
 
 function updateLeaderboard() {
-  const dPts = +document.getElementById('lead-pts-drazen').textContent;
-  const kPts = +document.getElementById('lead-pts-dinko').textContent;
+  const names = { drazen: 'Dražen', dinko: 'Dinko', matej: 'Matej', nikola: 'Nikola' };
+  const scores = PLAYERS.map(pl => ({
+    pl, pts: +document.getElementById('lead-pts-'+pl).textContent
+  }));
+  const maxPts = Math.max(...scores.map(s => s.pts));
+  scores.forEach(({ pl }) => {
+    const pts = +document.getElementById('lead-pts-'+pl).textContent;
+    document.getElementById('lead-'+pl).style.fontWeight = pts === maxPts ? '700' : '400';
+  });
+  const leaders = scores.filter(s => s.pts === maxPts);
   const winner = document.getElementById('lead-winner');
-  document.getElementById('lead-drazen').style.fontWeight = dPts >= kPts ? '700' : '400';
-  document.getElementById('lead-dinko').style.fontWeight  = kPts >= dPts ? '700' : '400';
-  if (dPts === kPts) winner.textContent = '🤝 Izjednačeno!';
-  else if (dPts > kPts) winner.textContent = `🏆 Dražen vodi za ${dPts-kPts} bod${dPts-kPts===1?'':'ova'}`;
-  else winner.textContent = `🏆 Dinko vodi za ${kPts-dPts} bod${kPts-dPts===1?'':'ova'}`;
+  if (leaders.length > 1) {
+    winner.textContent = '🤝 Izjednačeno!';
+  } else {
+    const lead = leaders[0];
+    const second = scores.filter(s => s.pl !== lead.pl).sort((a,b) => b.pts-a.pts)[0];
+    const diff = lead.pts - second.pts;
+    winner.textContent = `🏆 ${names[lead.pl]} vodi za ${diff} bod${diff===1?'':'ova'}`;
+  }
 }
 
 function addMatch() {
@@ -709,8 +783,7 @@ function addMatch() {
   data.matches.push({id, h, a, rh, ra});
   saveLocalCache();
   renderMatches();
-  renderPlayer('drazen');
-  renderPlayer('dinko');
+  PLAYERS.forEach(p => renderPlayer(p));
   ['mh','ma','mrh','mra'].forEach(x => document.getElementById(x).value = '');
   document.getElementById('mh').focus();
 }
@@ -721,8 +794,7 @@ function updateResult(id, field, value) {
   match[field] = value === '' ? null : parseInt(value);
   saveLocalCache();
   renderMatches();
-  renderPlayer('drazen');
-  renderPlayer('dinko');
+  PLAYERS.forEach(p => renderPlayer(p));
 }
 
 function updateTipText(player, id, value) {
@@ -745,35 +817,33 @@ function updateTipText(player, id, value) {
 function deleteMatch(id) {
   if (!confirm('Obrisati ovu utakmicu za oba igrača?')) return;
   data.matches = data.matches.filter(m => m.id !== id);
-  delete data.tips.drazen[String(id)];
-  delete data.tips.dinko[String(id)];
+  PLAYERS.forEach(pl => delete data.tips[pl][String(id)]);
   saveLocalCache();
   renderMatches();
-  renderPlayer('drazen');
-  renderPlayer('dinko');
+  PLAYERS.forEach(p => renderPlayer(p));
 }
 
 function clearAllMatches() {
   if (!confirm('Obrisati sve utakmice za oba igrača?')) return;
   data.matches = [];
-  data.tips = { drazen: {}, dinko: {} };
+  data.tips = Object.fromEntries(PLAYERS.map(pl => [pl, {}]));
   saveLocalCache();
   renderMatches();
-  renderPlayer('drazen');
-  renderPlayer('dinko');
+  PLAYERS.forEach(p => renderPlayer(p));
 }
 
 function exportCSV() {
-  let csv = '#,Utakmica,Dražen tip,Dinko tip,Stvarni rezultat,Dražen bodovi,Dinko bodovi\n';
+  const names = { drazen: 'Dražen', dinko: 'Dinko', matej: 'Matej', nikola: 'Nikola' };
+  const tipHeaders = PLAYERS.map(pl => `${names[pl]} tip`).join(',');
+  const ptsHeaders = PLAYERS.map(pl => `${names[pl]} bodovi`).join(',');
+  let csv = `#,Utakmica,${tipHeaders},Stvarni rezultat,${ptsHeaders}\n`;
   data.matches.forEach((m, i) => {
-    const dTip = data.tips.drazen[String(m.id)];
-    const kTip = data.tips.dinko[String(m.id)];
-    const dCalc = calcPoints(m, dTip);
-    const kCalc = calcPoints(m, kTip);
-    const dStr = dTip && dTip.ph !== null ? `${dTip.ph}:${dTip.pa}` : '–';
-    const kStr = kTip && kTip.ph !== null ? `${kTip.ph}:${kTip.pa}` : '–';
+    const tips  = PLAYERS.map(pl => data.tips[pl][String(m.id)]);
+    const calcs = tips.map(t => calcPoints(m, t));
+    const tipStrs = tips.map(t => t && t.ph !== null ? `${t.ph}:${t.pa}` : '–').map(s => `"${s}"`).join(',');
     const rStr = m.rh !== null && m.rh !== undefined ? `${m.rh}:${m.ra}` : '–';
-    csv += `${i+1},"${m.h} – ${m.a}","${dStr}","${kStr}","${rStr}",${dCalc.pts ?? '–'},${kCalc.pts ?? '–'}\n`;
+    const ptsStrs = calcs.map(c => c.pts ?? '–').join(',');
+    csv += `${i+1},"${m.h} – ${m.a}",${tipStrs},"${rStr}",${ptsStrs}\n`;
   });
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
