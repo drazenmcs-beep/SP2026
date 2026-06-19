@@ -195,6 +195,34 @@
       "a": "Južna Koreja",
       "rh": 1,
       "ra": 0
+    },
+    {
+      "id": 1781864146640,
+      "h": "SAD",
+      "a": "Australija",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1781864153523,
+      "h": "Škotska",
+      "a": "Maroko",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1781864159736,
+      "h": "Brazil",
+      "a": "Haiti",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1781864166703,
+      "h": "Turska",
+      "a": "Paragvaj",
+      "rh": null,
+      "ra": null
     }
   ],
   "tips": {
