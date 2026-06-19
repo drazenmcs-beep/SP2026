@@ -556,12 +556,14 @@ function loadLocalCache() {
 async function load() {
   document.getElementById('loading-overlay').style.display = 'flex';
   try {
+    // GitHub API uvijek vraća najsvježiji commit (bez CDN caching-a)
     const res = await fetch(
-      `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_DATA_FILE}?_nc=${Date.now()}`,
-      { cache: 'no-store' }
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`,
+      { cache: 'no-store', headers: { 'Accept': 'application/vnd.github.v3+json' } }
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    data = await res.json();
+    const meta = await res.json();
+    data = JSON.parse(atob(meta.content.replace(/\s/g, '')));
     saveLocalCache();
   } catch(e) {
     loadLocalCache();
