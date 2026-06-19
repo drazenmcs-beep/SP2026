@@ -563,7 +563,7 @@ async function load() {
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const { download_url } = await res.json();
-    const raw = await fetch(download_url + '&_nc=' + Date.now(), { cache: 'no-store' });
+    const raw = await fetch(download_url, { cache: 'no-store' });
     data = await raw.json();
     saveLocalCache();
   } catch(e) {
