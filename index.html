@@ -23,13 +23,17 @@
   .tabs-bar {
     background: #fff; border-bottom: 1px solid #e2e8f0;
     display: flex; gap: 0; padding: 0 24px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .tabs-bar::-webkit-scrollbar { display: none; }
   .tab-btn {
     padding: 14px 22px; border: none; background: none;
     font-size: 14px; font-weight: 600; color: #64748b;
     cursor: pointer; border-bottom: 3px solid transparent;
     transition: color .15s, border-color .15s;
     display: flex; align-items: center; gap: 8px;
+    white-space: nowrap; flex-shrink: 0;
   }
   .tab-btn:hover { color: #1e293b; }
   .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
@@ -210,11 +214,14 @@
 
   @media (max-width: 640px) {
     .team-in { width: 110px; }
-    header h1 { font-size: 14px; }
+    header { padding: 10px 12px; gap: 8px; }
+    header h1 { font-size: 13px; }
     header p { display: none; }
+    header > div:last-child { gap: 4px; }
     #save-btn { font-size: 11px; padding: 8px 8px; }
-    #gh-save-btn { font-size: 12px; padding: 8px 10px; }
-    .tab-btn { padding: 10px 10px; font-size: 12px; gap: 4px; }
+    #gh-save-btn { font-size: 11px; padding: 8px 8px; white-space: nowrap; }
+    .tab-btn { padding: 10px 12px; font-size: 12px; gap: 4px; }
+    .tabs-bar { padding: 0 4px; }
     .summary { padding: 10px 12px; gap: 6px; }
     .stat-card { min-width: calc(50% - 3px); padding: 10px 10px; }
     .stat-card .val { font-size: 20px; }
