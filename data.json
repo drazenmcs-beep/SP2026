@@ -207,22 +207,22 @@
       "id": 1781867476573,
       "h": "Škotska",
       "a": "Maroko",
-      "rh": null,
-      "ra": null
+      "rh": 0,
+      "ra": 1
     },
     {
       "id": 1781867483607,
       "h": "Brazil",
       "a": "Haiti",
-      "rh": null,
-      "ra": null
+      "rh": 3,
+      "ra": 0
     },
     {
       "id": 1781867490053,
       "h": "Turska",
       "a": "Paragvaj",
-      "rh": null,
-      "ra": null
+      "rh": 0,
+      "ra": 1
     }
   ],
   "tips": {
