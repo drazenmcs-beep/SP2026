@@ -21,6 +21,7 @@ jobs:
         run: |
           python3 << 'PYEOF'
           import json, urllib.request, datetime, os, sys
+          import zoneinfo
 
           FD_KEY = os.environ.get('FD_API_KEY', '')
           if not FD_KEY:
@@ -55,7 +56,9 @@ jobs:
 
           if not data.get("settings"):
               data["settings"] = {}
-          data["settings"]["lastChecked"] = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+          hr_tz = zoneinfo.ZoneInfo("Europe/Zagreb")
+          now_hr = datetime.datetime.now(hr_tz)
+          data["settings"]["lastChecked"] = now_hr.strftime("%Y-%m-%dT%H:%M:%S.000") + now_hr.strftime("%z")[:3] + ":" + now_hr.strftime("%z")[3:]
 
           with open('data.json', 'w', encoding='utf-8') as f:
               json.dump(data, f, ensure_ascii=False, indent=2)
@@ -69,4 +72,3 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
           git diff --staged --quiet && echo "Nema promjena." || (git commit -m "Auto-fetch: ažurirani rezultati utakmica" && git push)
-
