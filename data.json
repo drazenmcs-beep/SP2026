@@ -844,7 +844,7 @@
     }
   },
   "settings": {
-    "checkIntervalMinutes": 1,
+    "checkIntervalMinutes": 2,
     "lastChecked": "2026-06-20T11:05:13.000Z"
   }
 }
