@@ -268,8 +268,8 @@
       "id": 1781943012656,
       "h": "Njemačka",
       "a": "Obala Bjelokosti",
-      "rh": null,
-      "ra": null,
+      "rh": 2,
+      "ra": 1,
       "fdid": 537353
     },
     {
@@ -941,6 +941,6 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-21T00:00:49.000+02:00"
+    "lastChecked": "2026-06-21T00:15:29.000+02:00"
   }
 }
