@@ -2,7 +2,7 @@ name: Fetch Football Results
 
 on:
   schedule:
-    - cron: '*/5 * * * *'    # svakih 5 minuta (stvarni interval se čita iz data.json)
+    - cron: '*/5 * * * *'    # svakih 5 minuta
   workflow_dispatch:           # omogućuje ručno pokretanje
 
 jobs:
@@ -30,25 +30,6 @@ jobs:
 
           with open('data.json', 'r', encoding='utf-8') as f:
               data = json.load(f)
-
-          # Provjeri je li prošlo dovoljno vremena od zadnje provjere
-          settings = data.get('settings', {})
-          interval_mins = settings.get('checkIntervalMinutes', 20)
-          last_checked_str = settings.get('lastChecked')
-
-          if interval_mins and interval_mins > 0 and last_checked_str:
-              try:
-                  last_checked = datetime.datetime.fromisoformat(last_checked_str)
-                  if last_checked.tzinfo is None:
-                      last_checked = last_checked.replace(tzinfo=datetime.timezone.utc)
-                  hr_tz = zoneinfo.ZoneInfo("Europe/Zagreb")
-                  now = datetime.datetime.now(hr_tz)
-                  elapsed = (now - last_checked).total_seconds() / 60
-                  if elapsed < interval_mins:
-                      print(f"Preskačem — prošlo {elapsed:.1f} min od zadnje provjere, interval je {interval_mins} min.")
-                      sys.exit(0)
-              except Exception as e:
-                  print(f"Greška pri provjeri intervala: {e} — nastavljam.")
 
           to_check = [m for m in data['matches'] if m.get('fdid') and m.get('rh') is None]
           print(f"Utakmice za provjeru: {len(to_check)}")
