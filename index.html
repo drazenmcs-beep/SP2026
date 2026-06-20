@@ -687,20 +687,30 @@ function loadLocalCache() {
   return false;
 }
 
+function ghHeaders() {
+  const token = localStorage.getItem('gh_pat');
+  const h = { 'Accept': 'application/vnd.github.raw+json' };
+  if (token) h['Authorization'] = `token ${token}`;
+  return h;
+}
+
 async function load() {
   document.getElementById('loading-overlay').style.display = 'flex';
   try {
-    // application/vnd.github.raw+json — vraća sirovi sadržaj datoteke direktno
-    // bez prolaska kroz raw.githubusercontent.com CDN koji može cachirati staru verziju
     const res = await fetch(
       `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`,
-      { cache: 'no-store', headers: { 'Accept': 'application/vnd.github.raw+json' } }
+      { cache: 'no-store', headers: ghHeaders() }
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
     data = await res.json();
     saveLocalCache();
   } catch(e) {
-    loadLocalCache();
+    const hasCache = loadLocalCache();
+    if (!hasCache) {
+      document.getElementById('loading-overlay').style.display = 'none';
+      alert('Greška pri dohvatu podataka: ' + e.message + '\n\nPokušaj osvježiti stranicu ili provjeri vezu.');
+      return;
+    }
     console.warn('Fetch data.json pao, koristim lokalni cache:', e.message);
   }
   document.getElementById('loading-overlay').style.display = 'none';
@@ -1068,7 +1078,7 @@ function startCountdown() {
           try {
             const res = await fetch(
               `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`,
-              { cache: 'no-store', headers: { 'Accept': 'application/vnd.github.raw+json' } }
+              { cache: 'no-store', headers: ghHeaders() }
             );
             if (res.ok) {
               const fresh = await res.json();
@@ -1087,7 +1097,7 @@ function startCountdown() {
               }
             }
           } catch(e) {}
-          if (_autoRefreshing) setTimeout(pollGH, 30000);
+          if (_autoRefreshing) setTimeout(pollGH, 60000);
         };
         setTimeout(pollGH, 30000);
       }
