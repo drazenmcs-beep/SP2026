@@ -806,5 +806,9 @@
         "pa": 2
       }
     }
+  },
+  "settings": {
+    "checkIntervalMinutes": 20,
+    "lastChecked": null
   }
 }

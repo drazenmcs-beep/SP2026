@@ -100,8 +100,40 @@
   /* Utakmice table */
   #panel-utakmice col.c-num    { width: 40px; }
   #panel-utakmice col.c-teams  { width: auto; }
+  #panel-utakmice col.c-fdid   { width: 110px; }
   #panel-utakmice col.c-actual { width: 130px; }
   #panel-utakmice col.c-del    { width: 36px; }
+
+  /* Auto-fetch settings box */
+  .autofetch-box {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .autofetch-box label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+  .interval-input {
+    width: 70px; text-align: center; font-size: 15px; font-weight: 700;
+    background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;
+    color: #1e293b; padding: 6px 8px; outline: none;
+  }
+  .interval-input:focus { border-color: #2563eb; }
+  .countdown-wrap {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: #64748b;
+  }
+  .countdown-timer {
+    font-size: 22px; font-weight: 800; font-family: monospace;
+    color: #2563eb; min-width: 60px; text-align: center;
+  }
+  .countdown-timer.off { color: #94a3b8; font-size: 14px; font-weight: 600; }
+  .fdid-input {
+    width: 88px; font-size: 12px; font-family: monospace;
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px;
+    color: #475569; padding: 3px 6px; outline: none; transition: border-color .2s;
+  }
+  .fdid-input:focus { border-color: #2563eb; background: #fff; }
+  .fdid-input::placeholder { color: #cbd5e1; }
 
   /* Player tables — auto layout so Utakmica column fills available space */
   #panel-drazen table, #panel-dinko table, #panel-matej table, #panel-nikola table { table-layout: auto; }
@@ -290,10 +322,12 @@
   .is-readonly #gh-save-btn,
   .is-readonly button[onclick="resetGHToken()"],
   .is-readonly .add-section,
+  .is-readonly .autofetch-box,
   .is-readonly .btn-clear,
   .is-readonly .del-btn { display: none !important; }
   .is-readonly .score-in-sm,
-  .is-readonly .tip-input { pointer-events: none; opacity: .6; }
+  .is-readonly .tip-input,
+  .is-readonly .fdid-input { pointer-events: none; opacity: .6; }
 
   /* Token modal */
   #token-modal-overlay {
@@ -456,14 +490,28 @@
         <button class="btn btn-add" onclick="addMatch()">Dodaj</button>
       </div>
     </div>
+    <div class="autofetch-box">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label>⚙️ Auto-fetch interval</label>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="number" class="interval-input" id="interval-input" min="0" max="120" placeholder="min"
+            onchange="saveInterval(this.value)" oninput="saveInterval(this.value)">
+          <span style="font-size:12px;color:#94a3b8">min &nbsp;(0 = isključeno)</span>
+        </div>
+      </div>
+      <div class="countdown-wrap">
+        <span style="font-size:12px;color:#94a3b8">Sljedeća provjera za:</span>
+        <span class="countdown-timer off" id="countdown-timer">–</span>
+      </div>
+    </div>
     <div class="actions">
       <button class="btn btn-export" onclick="exportCSV()">⬇ Izvezi CSV</button>
       <button class="btn btn-clear" onclick="clearAllMatches()">🗑 Obriši sve</button>
     </div>
     <div class="table-wrap">
       <table>
-        <colgroup><col class="c-num"><col class="c-teams"><col class="c-actual"><col class="c-del"></colgroup>
-        <thead><tr><th>#</th><th>Utakmica</th><th>Stvarni rezultat</th><th></th></tr></thead>
+        <colgroup><col class="c-num"><col class="c-teams"><col class="c-fdid"><col class="c-actual"><col class="c-del"></colgroup>
+        <thead><tr><th>#</th><th>Utakmica</th><th>FD ID</th><th>Stvarni rezultat</th><th></th></tr></thead>
         <tbody id="tbody-utakmice"></tbody>
       </table>
       <div class="empty-msg" id="empty-utakmice" style="display:none">Još nema utakmica ☝</div>
@@ -609,7 +657,8 @@ const GH_BRANCH    = 'main';
 const GH_DATA_FILE = 'data.json';
 
 const PLAYERS = ['drazen','dinko','matej','nikola'];
-let data = { matches: [], tips: { drazen: {}, dinko: {}, matej: {}, nikola: {} } };
+let data = { matches: [], tips: { drazen: {}, dinko: {}, matej: {}, nikola: {} }, settings: { checkIntervalMinutes: 20, lastChecked: null } };
+let _countdownTimer = null;
 let currentTab = 'utakmice';
 
 function calcPoints(match, tip) {
@@ -658,6 +707,7 @@ async function load() {
   renderMatches();
   PLAYERS.forEach(p => renderPlayer(p));
   applyAccessLevel();
+  initIntervalUI();
 }
 
 function applyAccessLevel() {
@@ -669,6 +719,9 @@ function applyAccessLevel() {
   document.querySelector('.add-section').style.display = ro ? 'none' : '';
   // Obriši sve + CSV ostaje vidljiv, ali Obriši sakrijemo
   document.querySelector('.btn-clear').style.display = ro ? 'none' : '';
+  // Auto-fetch box — samo admin
+  const afBox = document.querySelector('.autofetch-box');
+  if (afBox) afBox.style.display = ro ? 'none' : '';
   // Score inputi u tablici utakmica — readonly
   if (ro) {
     document.querySelectorAll('.score-in-sm').forEach(el => el.disabled = true);
@@ -697,6 +750,8 @@ function renderMatches() {
     return `<tr>
       <td style="color:#94a3b8;font-size:12px">${i+1}</td>
       <td class="teams">${m.h} – ${m.a}</td>
+      <td><input type="text" class="fdid-input" value="${m.fdid || ''}"
+        onchange="updateFdid(${m.id},this.value)" placeholder="npr. 521234"></td>
       <td>
         <div class="score-cell">
           <input type="number" class="score-in-sm" value="${hasRh ? m.rh : ''}"
@@ -712,6 +767,7 @@ function renderMatches() {
   if (isReadonly()) {
     tbody.querySelectorAll('.score-in-sm').forEach(el => el.disabled = true);
     tbody.querySelectorAll('.del-btn').forEach(el => el.style.display = 'none');
+    tbody.querySelectorAll('.fdid-input').forEach(el => el.disabled = true);
   }
 }
 
@@ -961,6 +1017,48 @@ async function doGitHubSave(token) {
     alert('Greška: ' + err.message);
     btn.textContent = origText; btn.style.background=''; btn.style.color=''; btn.disabled=false;
   }
+}
+
+function updateFdid(id, value) {
+  const match = data.matches.find(m => m.id === id);
+  if (!match) return;
+  match.fdid = value.trim() || null;
+  saveLocalCache();
+}
+
+function saveInterval(val) {
+  const mins = parseInt(val) || 0;
+  if (!data.settings) data.settings = {};
+  data.settings.checkIntervalMinutes = mins;
+  saveLocalCache();
+  startCountdown();
+}
+
+function initIntervalUI() {
+  const mins = data.settings?.checkIntervalMinutes ?? 20;
+  const input = document.getElementById('interval-input');
+  if (input) input.value = mins || '';
+  startCountdown();
+}
+
+function startCountdown() {
+  if (_countdownTimer) clearInterval(_countdownTimer);
+  const el = document.getElementById('countdown-timer');
+  if (!el) return;
+  const tick = () => {
+    const mins = data.settings?.checkIntervalMinutes ?? 20;
+    const last = data.settings?.lastChecked ? new Date(data.settings.lastChecked) : null;
+    if (!mins) { el.textContent = 'Isključeno'; el.className = 'countdown-timer off'; return; }
+    if (!last) { el.textContent = 'Čeka...'; el.className = 'countdown-timer off'; return; }
+    const nextCheck = new Date(last.getTime() + mins * 60000);
+    const rem = Math.max(0, nextCheck - Date.now());
+    const m = Math.floor(rem / 60000);
+    const s = Math.floor((rem % 60000) / 1000);
+    el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    el.style.color = rem < 60000 ? '#f59e0b' : '#2563eb';
+  };
+  tick();
+  _countdownTimer = setInterval(tick, 1000);
 }
 
 function resetGHToken() {
