@@ -2,7 +2,7 @@ name: Fetch Football Results
 
 on:
   schedule:
-    - cron: '*/5 * * * *'    # svakih 5 minuta
+    - cron: '*/15 * * * *'    # svakih 5 minuta
   workflow_dispatch:           # omogućuje ručno pokretanje
 
 jobs:
