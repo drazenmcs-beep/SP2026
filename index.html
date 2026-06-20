@@ -1026,12 +1026,16 @@ function updateFdid(id, value) {
   saveLocalCache();
 }
 
+let _intervalSaveTimer = null;
 function saveInterval(val) {
   const mins = parseInt(val) || 0;
   if (!data.settings) data.settings = {};
   data.settings.checkIntervalMinutes = mins;
   saveLocalCache();
   startCountdown();
+  // Auto-spremi na GitHub nakon 1.5s bez daljnjih promjena
+  clearTimeout(_intervalSaveTimer);
+  _intervalSaveTimer = setTimeout(() => saveToGH(), 1500);
 }
 
 function initIntervalUI() {
