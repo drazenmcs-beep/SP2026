@@ -284,8 +284,8 @@
       "id": 1781943039592,
       "h": "Tunis",
       "a": "Japan",
-      "rh": null,
-      "ra": null,
+      "rh": 0,
+      "ra": 4,
       "fdid": 537360
     },
     {
@@ -941,6 +941,6 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-21T08:00:49.000+02:00"
+    "lastChecked": "2026-06-21T08:15:27.000+02:00"
   }
 }
