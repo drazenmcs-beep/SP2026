@@ -300,8 +300,8 @@
       "id": 1781987338640,
       "h": "Belgija",
       "a": "Iran",
-      "rh": null,
-      "ra": null,
+      "rh": 0,
+      "ra": 0,
       "fdid": "537365"
     },
     {
@@ -1229,7 +1229,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-21T23:00:48.000+02:00"
+    "lastChecked": "2026-06-21T23:15:27.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
