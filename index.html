@@ -295,6 +295,30 @@
     }
   }
 
+  /* Bonus igre */
+  .bonus-section {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .bonus-section h2 { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: #374151; }
+  .bonus-game { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; }
+  .bonus-game:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .bonus-game h3 { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; }
+  .bonus-input {
+    background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px;
+    color: #1e293b; padding: 6px 10px; font-size: 13px; outline: none;
+    transition: border-color .2s; width: 130px;
+  }
+  .bonus-input:focus { border-color: #2563eb; background: #fff; }
+  .groups-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 6px; }
+  .group-row { display: flex; align-items: center; gap: 6px; }
+  .group-label { font-size: 12px; font-weight: 700; color: #64748b; width: 50px; flex-shrink: 0; }
+  .bonus-result { font-size: 12px; padding: 2px 7px; border-radius: 4px; font-weight: 700; }
+  .bonus-hit { background: #dcfce7; color: #16a34a; }
+  .bonus-miss { background: #fee2e2; color: #991b1b; }
+  .bonus-pts-badge { background: #ede9fe; color: #6d28d9; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
   /* Read-only mode — primijenjeno odmah iz sessionStorage, bez flasha */
   .is-readonly #gh-save-btn,
   .is-readonly button[onclick="resetGHToken()"],
@@ -303,7 +327,9 @@
   .is-readonly .del-btn { display: none !important; }
   .is-readonly .score-in-sm,
   .is-readonly .tip-input,
-  .is-readonly .fdid-input { pointer-events: none; opacity: .6; }
+  .is-readonly .fdid-input,
+  .is-readonly .bonus-input { pointer-events: none; opacity: .6; }
+  .is-readonly .bonus-admin-section { display: none !important; }
 
   /* Token modal */
   #token-modal-overlay {
@@ -466,6 +492,7 @@
         <button class="btn btn-add" onclick="addMatch()">Dodaj</button>
       </div>
     </div>
+    <div id="bonus-admin-section" class="bonus-section bonus-admin-section"></div>
     <div class="actions">
       <button class="btn btn-export" onclick="exportCSV()">⬇ Izvezi CSV</button>
       <button class="btn btn-clear" onclick="clearAllMatches()">🗑 Obriši sve</button>
@@ -490,8 +517,10 @@
     <div class="stat-card"><div class="val c-amber" id="d-outcome">0</div><div class="lbl" id="d-outcome-lbl">Točan ishod (1b)</div></div>
     <div class="stat-card"><div class="val" id="d-zero" style="color:#ef4444">0</div><div class="lbl">Utakmica bez bodova</div></div>
     <div class="stat-card"><div class="val c-slate" id="d-matches">0</div><div class="lbl">Utakmica</div></div>
+    <div class="stat-card"><div class="val" id="d-bonus" style="color:#7c3aed">0</div><div class="lbl">Bonus bodovi</div></div>
   </div>
   <div class="container">
+    <div id="bonus-drazen" class="bonus-section"></div>
     <div class="table-wrap">
       <table>
         <colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"></colgroup>
@@ -512,8 +541,10 @@
     <div class="stat-card"><div class="val c-amber" id="k-outcome">0</div><div class="lbl" id="k-outcome-lbl">Točan ishod (1b)</div></div>
     <div class="stat-card"><div class="val" id="k-zero" style="color:#ef4444">0</div><div class="lbl">Utakmica bez bodova</div></div>
     <div class="stat-card"><div class="val c-slate" id="k-matches">0</div><div class="lbl">Utakmica</div></div>
+    <div class="stat-card"><div class="val" id="k-bonus" style="color:#7c3aed">0</div><div class="lbl">Bonus bodovi</div></div>
   </div>
   <div class="container">
+    <div id="bonus-dinko" class="bonus-section"></div>
     <div class="table-wrap">
       <table>
         <colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"></colgroup>
@@ -534,8 +565,10 @@
     <div class="stat-card"><div class="val c-amber" id="m-outcome">0</div><div class="lbl" id="m-outcome-lbl">Točan ishod (1b)</div></div>
     <div class="stat-card"><div class="val" id="m-zero" style="color:#ef4444">0</div><div class="lbl">Utakmica bez bodova</div></div>
     <div class="stat-card"><div class="val c-slate" id="m-matches">0</div><div class="lbl">Utakmica</div></div>
+    <div class="stat-card"><div class="val" id="m-bonus" style="color:#7c3aed">0</div><div class="lbl">Bonus bodovi</div></div>
   </div>
   <div class="container">
+    <div id="bonus-matej" class="bonus-section"></div>
     <div class="table-wrap">
       <table>
         <colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"></colgroup>
@@ -556,8 +589,10 @@
     <div class="stat-card"><div class="val c-amber" id="n-outcome">0</div><div class="lbl" id="n-outcome-lbl">Točan ishod (1b)</div></div>
     <div class="stat-card"><div class="val" id="n-zero" style="color:#ef4444">0</div><div class="lbl">Utakmica bez bodova</div></div>
     <div class="stat-card"><div class="val c-slate" id="n-matches">0</div><div class="lbl">Utakmica</div></div>
+    <div class="stat-card"><div class="val" id="n-bonus" style="color:#7c3aed">0</div><div class="lbl">Bonus bodovi</div></div>
   </div>
   <div class="container">
+    <div id="bonus-nikola" class="bonus-section"></div>
     <div class="table-wrap">
       <table>
         <colgroup><col class="c-num"><col class="c-teams"><col class="c-tip"><col class="c-actual"><col class="c-pts"><col class="c-reason"></colgroup>
@@ -570,6 +605,9 @@
 </div>
 
 <script>
+const GROUPS = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+let _matchPts = {};
+
 const PIN_HASH_ADMIN    = 'cbfad02f9ed2a8d1e08d8f74f5303e9eb93637d47f82ab6f1c15871cf8dd0481'; // 1212
 const PIN_HASH_READONLY = 'dbff5341acad5e2a58db4efd5e72e2d9a0a843a28e02b1183c68162d0a3a3de6'; // 9876
 let pinInput = '';
@@ -676,8 +714,11 @@ async function load() {
     console.warn('Fetch data.json pao, koristim lokalni cache:', e.message);
   }
   document.getElementById('loading-overlay').style.display = 'none';
+  initBonusGames();
   renderMatches();
+  renderBonusAdmin();
   PLAYERS.forEach(p => renderPlayer(p));
+  PLAYERS.forEach(p => renderBonusPlayer(p));
   applyAccessLevel();
 }
 
@@ -762,14 +803,20 @@ function renderPlayer(player) {
   const outcome = scored.filter(r => r.pts===1).length;
   const zero    = scored.filter(r => r.pts===0).length;
 
-  document.getElementById(p+'-total').textContent   = total;
+  _matchPts[player] = total;
+  const bonus = calcBonusPoints(player);
+  const grand = total + bonus.total;
+
+  document.getElementById(p+'-total').textContent   = grand;
   document.getElementById(p+'-exact').innerHTML     = `${exact}<span class="sub-pts">x (${exact*3}b)</span>`;
   document.getElementById(p+'-diff').innerHTML      = `${diff}<span class="sub-pts">x (${diff*2}b)</span>`;
   document.getElementById(p+'-outcome').innerHTML   = `${outcome}<span class="sub-pts">x (${outcome}b)</span>`;
   document.getElementById(p+'-zero').textContent    = zero;
   document.getElementById(p+'-matches').textContent = data.matches.length;
-  document.getElementById('pill-'+player).textContent      = total;
-  document.getElementById('lead-pts-'+player).textContent  = total;
+  const bonusEl = document.getElementById(p+'-bonus');
+  if (bonusEl) bonusEl.textContent = bonus.total;
+  document.getElementById('pill-'+player).textContent      = grand;
+  document.getElementById('lead-pts-'+player).textContent  = grand;
   updateLeaderboard();
 
   tbody.innerHTML = rows.map((m, i) => {
@@ -874,7 +921,12 @@ function deleteMatch(id) {
 function clearAllMatches() {
   if (!confirm('Obrisati sve utakmice za oba igrača?')) return;
   data.matches = [];
-  data.tips = Object.fromEntries(PLAYERS.map(pl => [pl, {}]));
+  // Sačuvaj bonus tipove — briši samo match tipove
+  PLAYERS.forEach(pl => {
+    const bonusGames = data.tips[pl]?.bonusGames;
+    data.tips[pl] = {};
+    if (bonusGames) data.tips[pl].bonusGames = bonusGames;
+  });
   saveLocalCache();
   renderMatches();
   PLAYERS.forEach(p => renderPlayer(p));
@@ -1005,6 +1057,285 @@ function resetGHToken() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && ['mh','ma','mrh','mra'].includes(e.target.id)) addMatch();
 });
+
+// ===================== BONUS IGRE =====================
+
+function initBonusGames() {
+  // Sigurna inicijalizacija — samo dodaje nedostajuće, nikad ne briše postojeće
+  if (!data.bonusGames) {
+    data.bonusGames = {
+      groupWinners: Object.fromEntries(GROUPS.map(g => [g, ['','']])),
+      champion: '', topScorer: '',
+      mostGoals: Array(5).fill(''),
+      zeroPoints: Array(10).fill('')
+    };
+  } else {
+    if (!data.bonusGames.groupWinners) data.bonusGames.groupWinners = {};
+    GROUPS.forEach(g => { if (!data.bonusGames.groupWinners[g]) data.bonusGames.groupWinners[g] = ['','']; });
+    if (data.bonusGames.champion === undefined) data.bonusGames.champion = '';
+    if (data.bonusGames.topScorer === undefined) data.bonusGames.topScorer = '';
+    if (!Array.isArray(data.bonusGames.mostGoals)) data.bonusGames.mostGoals = Array(5).fill('');
+    if (!Array.isArray(data.bonusGames.zeroPoints)) data.bonusGames.zeroPoints = Array(10).fill('');
+  }
+  PLAYERS.forEach(pl => {
+    if (!data.tips[pl]) data.tips[pl] = {};
+    if (!data.tips[pl].bonusGames) {
+      data.tips[pl].bonusGames = {
+        groupWinners: Object.fromEntries(GROUPS.map(g => [g, ['','']])),
+        champion: '', topScorer: '', mostGoals: '', zeroPoints: ''
+      };
+    } else {
+      const pbg = data.tips[pl].bonusGames;
+      if (!pbg.groupWinners) pbg.groupWinners = {};
+      GROUPS.forEach(g => { if (!pbg.groupWinners[g]) pbg.groupWinners[g] = ['','']; });
+      if (pbg.champion === undefined) pbg.champion = '';
+      if (pbg.topScorer === undefined) pbg.topScorer = '';
+      if (pbg.mostGoals === undefined) pbg.mostGoals = '';
+      if (pbg.zeroPoints === undefined) pbg.zeroPoints = '';
+    }
+  });
+}
+
+function calcBonusPoints(player) {
+  const bg = data.bonusGames || {};
+  const pbg = data.tips[player]?.bonusGames || {};
+  let total = 0;
+  const details = { groupPts: 0 };
+
+  // MG1: Pobjednici skupina
+  GROUPS.forEach(g => {
+    const at = (bg.groupWinners?.[g] || ['','']).map(t => t.trim().toLowerCase()).filter(Boolean);
+    const pt = (pbg.groupWinners?.[g] || ['','']).map(t => t.trim().toLowerCase()).filter(Boolean);
+    if (at.length === 2 && pt.length === 2) {
+      const aSet = new Set(at);
+      const hit = pt.every(t => aSet.has(t));
+      details['group_'+g] = hit;
+      if (hit) { total++; details.groupPts++; }
+    } else {
+      details['group_'+g] = null;
+    }
+  });
+
+  // MG2: Svjetski prvak
+  const ac = (bg.champion || '').trim().toLowerCase();
+  const pc = (pbg.champion || '').trim().toLowerCase();
+  details.champion = (ac && pc) ? (ac === pc) : null;
+  if (details.champion === true) total += 15;
+
+  // MG3: Najbolji strijelac
+  const as_ = (bg.topScorer || '').trim().toLowerCase();
+  const ps = (pbg.topScorer || '').trim().toLowerCase();
+  details.topScorer = (as_ && ps) ? (as_ === ps) : null;
+  if (details.topScorer === true) total += 15;
+
+  // MG4: Najviše golova
+  const amg = (bg.mostGoals || []).map(t => t.trim().toLowerCase()).filter(Boolean);
+  const pmg = (pbg.mostGoals || '').trim().toLowerCase();
+  details.mostGoals = (amg.length > 0 && pmg) ? amg.includes(pmg) : null;
+  if (details.mostGoals === true) total += 5;
+
+  // MG5: 0 bodova
+  const azp = (bg.zeroPoints || []).map(t => t.trim().toLowerCase()).filter(Boolean);
+  const pzp = (pbg.zeroPoints || '').trim().toLowerCase();
+  if (!pzp || azp.length === 0) {
+    details.zeroPoints = null;
+  } else {
+    details.zeroPoints = azp.includes(pzp);
+    if (details.zeroPoints) total += 5;
+  }
+
+  return { total, details };
+}
+
+function renderBonusAdmin() {
+  const div = document.getElementById('bonus-admin-section');
+  if (!div) return;
+  const bg = data.bonusGames || {};
+
+  let gwHTML = '<div class="groups-grid">';
+  GROUPS.forEach(g => {
+    const v0 = (bg.groupWinners?.[g]?.[0] || '').replace(/"/g,'&quot;');
+    const v1 = (bg.groupWinners?.[g]?.[1] || '').replace(/"/g,'&quot;');
+    gwHTML += `<div class="group-row">
+      <span class="group-label">Skup. ${g}:</span>
+      <input type="text" class="bonus-input" placeholder="1. mjesto" value="${v0}"
+        onchange="updateBonusAdmin('groupWinners','${g}',0,this.value)">
+      <input type="text" class="bonus-input" placeholder="2. mjesto" value="${v1}"
+        onchange="updateBonusAdmin('groupWinners','${g}',1,this.value)">
+    </div>`;
+  });
+  gwHTML += '</div>';
+
+  const mg = bg.mostGoals || Array(5).fill('');
+  let mgHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+  for (let i = 0; i < 5; i++) {
+    mgHTML += `<input type="text" class="bonus-input" placeholder="Momčad ${i+1}" value="${(mg[i]||'').replace(/"/g,'&quot;')}"
+      onchange="updateBonusAdminList('mostGoals',${i},this.value)">`;
+  }
+  mgHTML += '</div>';
+
+  const zp = bg.zeroPoints || Array(10).fill('');
+  let zpHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+  for (let i = 0; i < 10; i++) {
+    zpHTML += `<input type="text" class="bonus-input" placeholder="Momčad ${i+1}" value="${(zp[i]||'').replace(/"/g,'&quot;')}"
+      onchange="updateBonusAdminList('zeroPoints',${i},this.value)">`;
+  }
+  zpHTML += '</div><div style="font-size:11px;color:#94a3b8;margin-top:6px;">Ostavi sve prazno ako nijedna momčad nema 0 bodova — nitko ne dobiva bod.</div>';
+
+  div.innerHTML = `
+    <h2>🎮 Bonus igre — postavljanje rezultata</h2>
+    <div class="bonus-game">
+      <h3>1. Pobjednici skupina — upiši koje 2 momčadi prolaze iz svake grupe</h3>
+      ${gwHTML}
+    </div>
+    <div class="bonus-game">
+      <h3>2. Svjetski prvak</h3>
+      <input type="text" class="bonus-input" style="width:200px" placeholder="Osvajač naslova" value="${(bg.champion||'').replace(/"/g,'&quot;')}"
+        onchange="updateBonusAdmin('champion',null,null,this.value)">
+    </div>
+    <div class="bonus-game">
+      <h3>3. Najbolji strijelac</h3>
+      <input type="text" class="bonus-input" style="width:200px" placeholder="Ime i prezime" value="${(bg.topScorer||'').replace(/"/g,'&quot;')}"
+        onchange="updateBonusAdmin('topScorer',null,null,this.value)">
+    </div>
+    <div class="bonus-game">
+      <h3>4. Momčad(i) s najviše golova u grupi — dodaj više u slučaju izjednačenja</h3>
+      ${mgHTML}
+    </div>
+    <div class="bonus-game">
+      <h3>5. Momčad(i) s 0 bodova u grupi — max 10</h3>
+      ${zpHTML}
+    </div>
+  `;
+}
+
+function renderBonusPlayer(player) {
+  const div = document.getElementById('bonus-' + player);
+  if (!div) return;
+  const pbg = data.tips[player]?.bonusGames || {};
+  const bonus = calcBonusPoints(player);
+  const ro = isReadonly();
+  const dis = ro ? 'disabled' : '';
+
+  function icon(hit, pts) {
+    if (hit === null) return '<span style="color:#cbd5e1;font-size:12px;font-weight:600">–</span>';
+    return hit
+      ? `<span class="bonus-result bonus-hit">✓ +${pts}</span>`
+      : '<span class="bonus-result bonus-miss">✗</span>';
+  }
+
+  let gwHTML = '<div class="groups-grid">';
+  GROUPS.forEach(g => {
+    const v0 = (pbg.groupWinners?.[g]?.[0] || '').replace(/"/g,'&quot;');
+    const v1 = (pbg.groupWinners?.[g]?.[1] || '').replace(/"/g,'&quot;');
+    gwHTML += `<div class="group-row">
+      <span class="group-label">Sk. ${g}:</span>
+      <input type="text" class="bonus-input" placeholder="1. ekipa" value="${v0}"
+        onchange="updateBonusPlayer('${player}','groupWinners','${g}',0,this.value)" ${dis}>
+      <input type="text" class="bonus-input" placeholder="2. ekipa" value="${v1}"
+        onchange="updateBonusPlayer('${player}','groupWinners','${g}',1,this.value)" ${dis}>
+      ${icon(bonus.details['group_'+g], 1)}
+    </div>`;
+  });
+  gwHTML += '</div>';
+
+  div.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+      <h2 style="margin:0;font-size:14px;font-weight:700;color:#374151;">🎮 Bonus igre</h2>
+      <span class="bonus-pts-badge">+${bonus.total} bonus bodova</span>
+    </div>
+    <div class="bonus-game">
+      <h3>1. Pobjednici skupina &nbsp;<span style="font-weight:400;text-transform:none;color:#94a3b8">${bonus.details.groupPts}/12 skupina pogođeno (+${bonus.details.groupPts} bod.)</span></h3>
+      ${gwHTML}
+    </div>
+    <div class="bonus-game">
+      <h3>2. Svjetski prvak &nbsp;<span style="font-weight:400;text-transform:none;color:#94a3b8">15 bodova</span></h3>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" class="bonus-input" style="width:200px" placeholder="Upiši momčad" value="${(pbg.champion||'').replace(/"/g,'&quot;')}"
+          onchange="updateBonusPlayer('${player}','champion',null,null,this.value)" ${dis}>
+        ${icon(bonus.details.champion, 15)}
+      </div>
+    </div>
+    <div class="bonus-game">
+      <h3>3. Najbolji strijelac &nbsp;<span style="font-weight:400;text-transform:none;color:#94a3b8">15 bodova</span></h3>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" class="bonus-input" style="width:200px" placeholder="Ime i prezime" value="${(pbg.topScorer||'').replace(/"/g,'&quot;')}"
+          onchange="updateBonusPlayer('${player}','topScorer',null,null,this.value)" ${dis}>
+        ${icon(bonus.details.topScorer, 15)}
+      </div>
+    </div>
+    <div class="bonus-game">
+      <h3>4. Momčad s najviše golova u grupi &nbsp;<span style="font-weight:400;text-transform:none;color:#94a3b8">5 bodova</span></h3>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" class="bonus-input" style="width:200px" placeholder="Upiši momčad" value="${(pbg.mostGoals||'').replace(/"/g,'&quot;')}"
+          onchange="updateBonusPlayer('${player}','mostGoals',null,null,this.value)" ${dis}>
+        ${icon(bonus.details.mostGoals, 5)}
+      </div>
+    </div>
+    <div class="bonus-game">
+      <h3>5. Momčad s 0 bodova u grupi &nbsp;<span style="font-weight:400;text-transform:none;color:#94a3b8">5 bodova</span></h3>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" class="bonus-input" style="width:200px" placeholder="Upiši momčad" value="${(pbg.zeroPoints||'').replace(/"/g,'&quot;')}"
+          onchange="updateBonusPlayer('${player}','zeroPoints',null,null,this.value)" ${dis}>
+        ${icon(bonus.details.zeroPoints, 5)}
+      </div>
+    </div>
+  `;
+}
+
+function updateBonusAdmin(field, group, idx, value) {
+  if (!data.bonusGames) data.bonusGames = {};
+  if (field === 'groupWinners') {
+    if (!data.bonusGames.groupWinners) data.bonusGames.groupWinners = {};
+    if (!data.bonusGames.groupWinners[group]) data.bonusGames.groupWinners[group] = ['',''];
+    data.bonusGames.groupWinners[group][idx] = value.trim();
+  } else {
+    data.bonusGames[field] = value.trim();
+  }
+  saveLocalCache();
+  PLAYERS.forEach(p => { renderBonusPlayer(p); refreshPlayerTotal(p); });
+  updateLeaderboard();
+}
+
+function updateBonusAdminList(field, idx, value) {
+  if (!data.bonusGames) data.bonusGames = {};
+  if (!Array.isArray(data.bonusGames[field])) data.bonusGames[field] = [];
+  while (data.bonusGames[field].length <= idx) data.bonusGames[field].push('');
+  data.bonusGames[field][idx] = value.trim();
+  saveLocalCache();
+  PLAYERS.forEach(p => { renderBonusPlayer(p); refreshPlayerTotal(p); });
+  updateLeaderboard();
+}
+
+function updateBonusPlayer(player, field, group, idx, value) {
+  if (!data.tips[player]) data.tips[player] = {};
+  if (!data.tips[player].bonusGames) data.tips[player].bonusGames = {};
+  const pbg = data.tips[player].bonusGames;
+  if (field === 'groupWinners') {
+    if (!pbg.groupWinners) pbg.groupWinners = {};
+    if (!pbg.groupWinners[group]) pbg.groupWinners[group] = ['',''];
+    pbg.groupWinners[group][idx] = value.trim();
+  } else {
+    pbg[field] = value.trim();
+  }
+  saveLocalCache();
+  renderBonusPlayer(player);
+  refreshPlayerTotal(player);
+  updateLeaderboard();
+}
+
+function refreshPlayerTotal(player) {
+  const prefixMap = { drazen: 'd', dinko: 'k', matej: 'm', nikola: 'n' };
+  const p = prefixMap[player];
+  const bonus = calcBonusPoints(player);
+  const matchPts = _matchPts[player] || 0;
+  const grand = matchPts + bonus.total;
+  const bonusEl = document.getElementById(p+'-bonus');
+  if (bonusEl) bonusEl.textContent = bonus.total;
+  document.getElementById(p+'-total').textContent = grand;
+  document.getElementById('pill-'+player).textContent = grand;
+  document.getElementById('lead-pts-'+player).textContent = grand;
+}
 
 </script>
 
