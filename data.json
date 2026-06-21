@@ -502,58 +502,58 @@
       "bonusGames": {
         "groupWinners": {
           "A": [
-            "",
-            ""
+            "Meksiko",
+            "Češka"
           ],
           "B": [
-            "",
-            ""
+            "Švicarska",
+            "BiH"
           ],
           "C": [
-            "",
-            ""
+            "Brazil",
+            "Škotska"
           ],
           "D": [
-            "",
-            ""
+            "Turska",
+            "SAD"
           ],
           "E": [
-            "",
-            ""
+            "Njemačka",
+            "Ekvador"
           ],
           "F": [
-            "",
-            ""
+            "Nizozemska",
+            "Švedska"
           ],
           "G": [
-            "",
-            ""
+            "Belgija",
+            "Egipat"
           ],
           "H": [
-            "",
-            ""
+            "Španjolska",
+            "Urugvaj"
           ],
           "I": [
-            "",
-            ""
+            "Francuska",
+            "Norveška"
           ],
           "J": [
-            "",
-            ""
+            "Argentina",
+            "Austrija"
           ],
           "K": [
-            "",
-            ""
+            "Portugal",
+            "Kolumbija"
           ],
           "L": [
-            "",
-            ""
+            "Engleska",
+            "Hrvatska"
           ]
         },
         "champion": "Španjolska",
-        "topScorer": "",
-        "mostGoals": "",
-        "zeroPoints": ""
+        "topScorer": "Mbappe",
+        "mostGoals": "Španjolska",
+        "zeroPoints": "Curaco"
       },
       "1781987325460": {
         "ph": 3,
