@@ -324,8 +324,8 @@
       "id": 1781987408744,
       "h": "Argentina",
       "a": "Austrija",
-      "rh": null,
-      "ra": null,
+      "rh": 2,
+      "ra": 0,
       "fdid": "537399"
     },
     {
@@ -1293,7 +1293,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-22T21:00:55.000+02:00"
+    "lastChecked": "2026-06-22T21:15:35.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
