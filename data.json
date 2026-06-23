@@ -332,8 +332,8 @@
       "id": 1781987417340,
       "h": "Francuska",
       "a": "Irak",
-      "rh": null,
-      "ra": null,
+      "rh": 3,
+      "ra": 0,
       "fdid": "537393"
     },
     {
@@ -1373,7 +1373,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-23T02:45:25.000+02:00"
+    "lastChecked": "2026-06-23T03:00:51.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
