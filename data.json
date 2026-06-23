@@ -348,8 +348,8 @@
       "id": 1781987442761,
       "h": "Jordan",
       "a": "Alžir",
-      "rh": null,
-      "ra": null,
+      "rh": 1,
+      "ra": 2,
       "fdid": "537400"
     },
     {
@@ -1373,7 +1373,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-23T07:00:59.000+02:00"
+    "lastChecked": "2026-06-23T07:15:29.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
