@@ -356,8 +356,8 @@
       "id": 1782163627036,
       "h": "Portugal",
       "a": "Uzbekistan",
-      "rh": null,
-      "ra": null,
+      "rh": 5,
+      "ra": 0,
       "fdid": "537405"
     },
     {
@@ -1437,7 +1437,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-23T21:00:58.000+02:00"
+    "lastChecked": "2026-06-23T21:15:33.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
