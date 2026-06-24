@@ -372,8 +372,8 @@
       "id": 1782163641573,
       "h": "Panama",
       "a": "Hrvatska",
-      "rh": null,
-      "ra": null,
+      "rh": 0,
+      "ra": 1,
       "fdid": "537412"
     },
     {
@@ -1437,7 +1437,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-24T02:45:26.000+02:00"
+    "lastChecked": "2026-06-24T03:00:46.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
