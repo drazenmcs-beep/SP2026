@@ -431,6 +431,132 @@
       "rh": 1,
       "ra": 0,
       "fdid": "537332"
+    },
+    {
+      "id": 1782404469039,
+      "h": "Curaco",
+      "a": "Obala Bjelokosti",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404486428,
+      "h": "Ekvador",
+      "a": "Njemačka",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404495915,
+      "h": "Japan",
+      "a": "Švedska",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404502755,
+      "h": "Tunis",
+      "a": "Nizozemska",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404511969,
+      "h": "Paragvaj",
+      "a": "Australija",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404524107,
+      "h": "Turska",
+      "a": "SAD",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404538475,
+      "h": "Norveška",
+      "a": "Francuska",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404544145,
+      "h": "Senegal",
+      "a": "Irak",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404555319,
+      "h": "Urugvaj",
+      "a": "Španjolska",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404583975,
+      "h": "Zelenortska Rep",
+      "a": "Saudijska Arabija",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404589973,
+      "h": "Egipat",
+      "a": "Iran",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404598205,
+      "h": "Novi Zeland",
+      "a": "Belgija",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404604535,
+      "h": "Gana",
+      "a": "Hrvatska",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404610737,
+      "h": "Panama",
+      "a": "Engleska",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404636257,
+      "h": "DR Kongo",
+      "a": "Uzbekistan",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404647693,
+      "h": "Kolumbija",
+      "a": "Portugal",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404655375,
+      "h": "Alžir",
+      "a": "Austrija",
+      "rh": null,
+      "ra": null
+    },
+    {
+      "id": 1782404661402,
+      "h": "Jordan",
+      "a": "Argentina",
+      "rh": null,
+      "ra": null
     }
   ],
   "tips": {
@@ -706,6 +832,30 @@
       "1782163699500": {
         "ph": 1,
         "pa": 2
+      },
+      "1782404469039": {
+        "ph": 0,
+        "pa": 2
+      },
+      "1782404486428": {
+        "ph": 0,
+        "pa": 2
+      },
+      "1782404495915": {
+        "ph": 1,
+        "pa": 0
+      },
+      "1782404502755": {
+        "ph": 0,
+        "pa": 3
+      },
+      "1782404511969": {
+        "ph": 1,
+        "pa": 1
+      },
+      "1782404524107": {
+        "ph": 0,
+        "pa": 1
       }
     },
     "dinko": {
