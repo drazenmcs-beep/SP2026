@@ -404,16 +404,16 @@
       "id": 1782163675076,
       "h": "Maroko",
       "a": "Haiti",
-      "rh": null,
-      "ra": null,
+      "rh": 4,
+      "ra": 2,
       "fdid": "537344"
     },
     {
       "id": 1782163680762,
       "h": "Škotska",
       "a": "Brazil",
-      "rh": null,
-      "ra": null,
+      "rh": 0,
+      "ra": 3,
       "fdid": "537343"
     },
     {
@@ -1533,7 +1533,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-25T02:00:51.000+02:00"
+    "lastChecked": "2026-06-25T02:15:21.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
