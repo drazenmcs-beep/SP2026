@@ -468,16 +468,16 @@
       "id": 1782404511969,
       "h": "Paragvaj",
       "a": "Australija",
-      "rh": null,
-      "ra": null,
+      "rh": 0,
+      "ra": 0,
       "fdid": "537350"
     },
     {
       "id": 1782404524107,
       "h": "Turska",
       "a": "SAD",
-      "rh": null,
-      "ra": null,
+      "rh": 3,
+      "ra": 2,
       "fdid": "537349"
     },
     {
@@ -1773,7 +1773,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-26T06:00:49.000+02:00"
+    "lastChecked": "2026-06-26T06:15:26.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
