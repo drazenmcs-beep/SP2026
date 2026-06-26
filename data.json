@@ -452,8 +452,8 @@
       "id": 1782404495915,
       "h": "Japan",
       "a": "Švedska",
-      "rh": null,
-      "ra": null,
+      "rh": 1,
+      "ra": 1,
       "fdid": "537362"
     },
     {
@@ -1773,7 +1773,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-26T03:00:54.000+02:00"
+    "lastChecked": "2026-06-26T03:15:25.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
