@@ -484,16 +484,16 @@
       "id": 1782404538475,
       "h": "Norveška",
       "a": "Francuska",
-      "rh": null,
-      "ra": null,
+      "rh": 1,
+      "ra": 4,
       "fdid": "537395"
     },
     {
       "id": 1782404544145,
       "h": "Senegal",
       "a": "Irak",
-      "rh": null,
-      "ra": null,
+      "rh": 5,
+      "ra": 0,
       "fdid": "537396"
     },
     {
@@ -1869,7 +1869,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-26T23:00:52.000+02:00"
+    "lastChecked": "2026-06-26T23:15:23.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
