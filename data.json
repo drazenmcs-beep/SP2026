@@ -500,16 +500,16 @@
       "id": 1782404555319,
       "h": "Urugvaj",
       "a": "Španjolska",
-      "rh": null,
-      "ra": null,
+      "rh": 0,
+      "ra": 1,
       "fdid": "537373"
     },
     {
       "id": 1782404583975,
       "h": "Zelenortska Rep",
       "a": "Saudijska Arabija",
-      "rh": null,
-      "ra": null,
+      "rh": 0,
+      "ra": 0,
       "fdid": "537374"
     },
     {
@@ -1869,7 +1869,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-27T04:00:48.000+02:00"
+    "lastChecked": "2026-06-27T04:15:25.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
