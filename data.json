@@ -591,7 +591,8 @@
       "a": "Japan",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537423"
     },
     {
       "id": 1782643759268,
@@ -599,7 +600,8 @@
       "a": "Paragvaj",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537415"
     },
     {
       "id": 1782643766394,
@@ -607,7 +609,8 @@
       "a": "Maroko",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537418"
     },
     {
       "id": 1782643778655,
@@ -615,7 +618,8 @@
       "a": "Norveška",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537424"
     },
     {
       "id": 1782643784156,
@@ -623,7 +627,8 @@
       "a": "Švedska",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537416"
     },
     {
       "id": 1782643794298,
@@ -631,7 +636,8 @@
       "a": "Ekvador",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537425"
     },
     {
       "id": 1782643803646,
@@ -639,7 +645,8 @@
       "a": "DR Kongo",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537426"
     },
     {
       "id": 1782643810614,
@@ -647,7 +654,8 @@
       "a": "Senegal",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537422"
     },
     {
       "id": 1782643816506,
@@ -655,7 +663,8 @@
       "a": "BiH",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537421"
     },
     {
       "id": 1782643825053,
@@ -663,7 +672,8 @@
       "a": "Austrija",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537420"
     },
     {
       "id": 1782643830573,
@@ -671,7 +681,8 @@
       "a": "Hrvatska",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537419"
     },
     {
       "id": 1782643837710,
@@ -679,7 +690,8 @@
       "a": "Alžir",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537429"
     },
     {
       "id": 1782643847518,
@@ -687,7 +699,8 @@
       "a": "Egipat",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537428"
     },
     {
       "id": 1782643856890,
@@ -695,7 +708,8 @@
       "a": "Zelenortska Rep.",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537427"
     },
     {
       "id": 1782643862986,
@@ -703,7 +717,8 @@
       "a": "Gana",
       "rh": null,
       "ra": null,
-      "rt": true
+      "rt": true,
+      "fdid": "537430"
     }
   ],
   "tips": {
