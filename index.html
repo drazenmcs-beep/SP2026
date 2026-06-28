@@ -102,7 +102,12 @@
   #panel-utakmice col.c-teams  { width: auto; }
   #panel-utakmice col.c-fdid   { width: 110px; }
   #panel-utakmice col.c-actual { width: 130px; }
+  #panel-utakmice col.c-rt     { width: 56px; }
   #panel-utakmice col.c-del    { width: 36px; }
+
+  .rt-checkbox { width: 16px; height: 16px; accent-color: #7c3aed; cursor: pointer; }
+  .rt-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: #ede9fe; color: #6d28d9; margin-left: 4px; vertical-align: middle; }
+  .is-readonly .rt-checkbox { pointer-events: none; opacity: .6; }
 
   .fdid-input {
     width: 88px; font-size: 12px; font-family: monospace;
@@ -517,8 +522,8 @@
     </div>
     <div class="table-wrap">
       <table>
-        <colgroup><col class="c-num"><col class="c-teams"><col class="c-fdid"><col class="c-actual"><col class="c-del"></colgroup>
-        <thead><tr><th>#</th><th>Utakmica</th><th>FD ID</th><th>Stvarni rezultat</th><th></th></tr></thead>
+        <colgroup><col class="c-num"><col class="c-teams"><col class="c-fdid"><col class="c-actual"><col class="c-rt"><col class="c-del"></colgroup>
+        <thead><tr><th>#</th><th>Utakmica</th><th>FD ID</th><th>Stvarni rezultat</th><th title="Boduje se samo regularno vrijeme (90 min)">⏱ RT</th><th></th></tr></thead>
         <tbody id="tbody-utakmice"></tbody>
       </table>
       <div class="empty-msg" id="empty-utakmice" style="display:none">Još nema utakmica ☝</div>
@@ -756,6 +761,7 @@ function applyAccessLevel() {
     document.querySelectorAll('.tip-input').forEach(el => el.disabled = true);
     // Bonus igre — onemogući sve bonus inpute (admin sekcija ostaje vidljiva ali readonly)
     document.querySelectorAll('.bonus-input').forEach(el => el.disabled = true);
+    document.querySelectorAll('.rt-checkbox').forEach(el => el.disabled = true);
   }
 }
 
@@ -790,6 +796,10 @@ function renderMatches() {
             onchange="updateResult(${m.id},'ra',this.value)" min="0" max="99" placeholder="–">
         </div>
       </td>
+      <td style="text-align:center">
+        <input type="checkbox" class="rt-checkbox" title="Boduje se samo regularno vrijeme (90 min)"
+          ${m.rt ? 'checked' : ''} onchange="updateRt(${m.id},this.checked)">
+      </td>
       <td><button class="del-btn" onclick="deleteMatch(${m.id})">✕</button></td>
     </tr>`;
   }).join('');
@@ -797,6 +807,7 @@ function renderMatches() {
     tbody.querySelectorAll('.score-in-sm').forEach(el => el.disabled = true);
     tbody.querySelectorAll('.del-btn').forEach(el => el.style.display = 'none');
     tbody.querySelectorAll('.fdid-input').forEach(el => el.disabled = true);
+    tbody.querySelectorAll('.rt-checkbox').forEach(el => el.disabled = true);
   }
 }
 
@@ -845,7 +856,7 @@ function renderPlayer(player) {
     const tipVal = hasTip ? `${m.tip.ph}:${m.tip.pa}` : '';
     return `<tr>
       <td style="color:#94a3b8;font-size:12px">${i+1}</td>
-      <td class="teams">${m.h} – ${m.a}${m.pts===3 ? '<span class="exact-tag">TOČAN ✓</span>' : ''}</td>
+      <td class="teams">${m.h} – ${m.a}${m.rt ? '<span class="rt-badge">⏱ RT</span>' : ''}${m.pts===3 ? '<span class="exact-tag">TOČAN ✓</span>' : ''}</td>
       <td class="score"><input type="text" class="tip-input" value="${tipVal}"
         onchange="updateTipText('${player}',${m.id},this.value)"
         onkeydown="if(event.key==='Enter')this.blur()"
@@ -1064,6 +1075,14 @@ function updateFdid(id, value) {
   if (!match) return;
   match.fdid = value.trim() || null;
   saveLocalCache();
+}
+
+function updateRt(id, checked) {
+  const match = data.matches.find(m => m.id === id);
+  if (!match) return;
+  match.rt = checked ? true : undefined;
+  saveLocalCache();
+  PLAYERS.forEach(p => renderPlayer(p));
 }
 
 
