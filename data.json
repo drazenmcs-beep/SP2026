@@ -625,8 +625,8 @@
       "id": 1782643784156,
       "h": "Francuska",
       "a": "Švedska",
-      "rh": null,
-      "ra": null,
+      "rh": 3,
+      "ra": 0,
       "rt": true,
       "fdid": "537416"
     },
@@ -2221,7 +2221,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-07-01T00:45:26.000+02:00"
+    "lastChecked": "2026-07-01T01:00:50.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
