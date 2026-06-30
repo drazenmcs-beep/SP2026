@@ -109,6 +109,17 @@
   .rt-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: #ede9fe; color: #6d28d9; margin-left: 4px; vertical-align: middle; }
   .is-readonly .rt-checkbox { pointer-events: none; opacity: .6; }
 
+  /* RT detail row (produžeci + penali u admin tablici) */
+  .rt-detail-row td { background: #faf5ff; border-top: none; padding: 6px 12px 10px 12px !important; }
+  .rt-detail { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .rt-detail-item { display: flex; align-items: center; gap: 5px; }
+  .rt-detail-label { font-size: 11px; font-weight: 700; color: #7c3aed; white-space: nowrap; min-width: 90px; }
+  .is-readonly .rt-detail-row .score-in-sm { pointer-events: none; opacity: .6; }
+
+  /* Prikaz ET/pen rezultata u player tablicama */
+  .rt-extra { font-size: 11px; color: #94a3b8; display: block; margin-top: 2px; }
+  .rt-extra-label { font-weight: 700; color: #7c3aed; font-size: 10px; }
+
   .fdid-input {
     width: 88px; font-size: 12px; font-family: monospace;
     background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px;
@@ -809,7 +820,28 @@ function renderMatches() {
           ${m.rt ? 'checked' : ''} onchange="updateRt(${m.id},this.checked)">
       </td>
       <td><button class="del-btn" onclick="deleteMatch(${m.id})">✕</button></td>
-    </tr>`;
+    </tr>${m.rt ? `<tr class="rt-detail-row">
+      <td colspan="6">
+        <div class="rt-detail">
+          <div class="rt-detail-item">
+            <span class="rt-detail-label">⏱ Produžeci:</span>
+            <input type="number" class="score-in-sm" value="${m.eth ?? ''}" min="0" max="99" placeholder="–"
+              onchange="updateEtField(${m.id},'eth',this.value)">
+            <span class="score-sep">:</span>
+            <input type="number" class="score-in-sm" value="${m.eta ?? ''}" min="0" max="99" placeholder="–"
+              onchange="updateEtField(${m.id},'eta',this.value)">
+          </div>
+          <div class="rt-detail-item">
+            <span class="rt-detail-label">🥅 Penali:</span>
+            <input type="number" class="score-in-sm" value="${m.pth ?? ''}" min="0" max="99" placeholder="–"
+              onchange="updateEtField(${m.id},'pth',this.value)">
+            <span class="score-sep">:</span>
+            <input type="number" class="score-in-sm" value="${m.pta ?? ''}" min="0" max="99" placeholder="–"
+              onchange="updateEtField(${m.id},'pta',this.value)">
+          </div>
+        </div>
+      </td>
+    </tr>` : ''}`;
   }).join('');
   if (isReadonly()) {
     tbody.querySelectorAll('.score-in-sm').forEach(el => el.disabled = true);
@@ -869,7 +901,13 @@ function renderPlayer(player) {
         onchange="updateTipText('${player}',${m.id},this.value)"
         onkeydown="if(event.key==='Enter')this.blur()"
         placeholder="–:–" maxlength="5"></td>
-      <td class="score actual">${hasResult ? m.rh+':'+m.ra : '<span style="color:#cbd5e1">–:–</span>'}</td>
+      <td class="score actual">${(() => {
+        if (!hasResult) return '<span style="color:#cbd5e1">–:–</span>';
+        let r = m.rh+':'+m.ra;
+        if (m.rt && m.eth != null) r += `<span class="rt-extra"><span class="rt-extra-label">p.vr.</span> ${m.eth}:${m.eta}</span>`;
+        if (m.rt && m.pth != null) r += `<span class="rt-extra"><span class="rt-extra-label">11m</span> ${m.pth}:${m.pta}</span>`;
+        return r;
+      })()}</td>
       <td>${m.pts !== null ? '<span class="badge b'+m.pts+'">'+m.pts+'</span>' : '<span style="color:#cbd5e1">–</span>'}</td>
       <td class="reason">${m.reason}</td>
     </tr>`;
@@ -1089,6 +1127,20 @@ function updateRt(id, checked) {
   const match = data.matches.find(m => m.id === id);
   if (!match) return;
   match.rt = checked ? true : undefined;
+  saveLocalCache();
+  renderMatches();
+  PLAYERS.forEach(p => renderPlayer(p));
+}
+
+function updateEtField(id, field, value) {
+  const match = data.matches.find(m => m.id === id);
+  if (!match) return;
+  const v = value.trim();
+  if (v === '' || v === null) {
+    delete match[field];
+  } else {
+    match[field] = Number(v);
+  }
   saveLocalCache();
   PLAYERS.forEach(p => renderPlayer(p));
 }
