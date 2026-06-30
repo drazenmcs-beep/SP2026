@@ -31,7 +31,11 @@ jobs:
           with open('data.json', 'r', encoding='utf-8') as f:
               data = json.load(f)
 
-          to_check = [m for m in data['matches'] if m.get('fdid') and m.get('rh') is None]
+          # Provjeri: utakmice bez rezultata ILI RT utakmice kojima nedostaju podaci o produžecima
+          to_check = [m for m in data['matches'] if m.get('fdid') and (
+              m.get('rh') is None or
+              (m.get('rt') and not m.get('etFetched'))
+          )]
           print(f"Utakmice za provjeru: {len(to_check)}")
 
           updated = 0
@@ -46,11 +50,28 @@ jobs:
                   print(f"  [{m['h']} vs {m['a']}] fdid={m['fdid']} → {status}")
 
                   if status == "FINISHED":
-                      score = fd["score"]["fullTime"]
-                      m["rh"] = score["home"]
-                      m["ra"] = score["away"]
-                      print(f"    Rezultat: {m['rh']}:{m['ra']}")
-                      updated += 1
+                      score = fd["score"]
+
+                      # Regularno vrijeme (uvijek)
+                      if m.get('rh') is None:
+                          m["rh"] = score["fullTime"]["home"]
+                          m["ra"] = score["fullTime"]["away"]
+                          print(f"    RT rezultat: {m['rh']}:{m['ra']}")
+                          updated += 1
+
+                      # Produžeci i penali (za RT utakmice)
+                      if m.get('rt'):
+                          et = score.get("extraTime") or {}
+                          pen = score.get("penalties") or {}
+                          if et.get("home") is not None:
+                              m["eth"] = et["home"]
+                              m["eta"] = et["away"]
+                              print(f"    Produžeci: {m['eth']}:{m['eta']}")
+                          if pen.get("home") is not None:
+                              m["pth"] = pen["home"]
+                              m["pta"] = pen["away"]
+                              print(f"    Penali: {m['pth']}:{m['pta']}")
+                          m["etFetched"] = True  # ne provjeravaj više
               except Exception as e:
                   print(f"  Greška za fdid {m.get('fdid')}: {e}")
 
