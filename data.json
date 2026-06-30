@@ -583,7 +583,8 @@
       "rh": 0,
       "ra": 1,
       "fdid": "537417",
-      "rt": true
+      "rt": true,
+      "etFetched": true
     },
     {
       "id": 1782643752550,
@@ -592,7 +593,8 @@
       "rh": 2,
       "ra": 1,
       "rt": true,
-      "fdid": "537423"
+      "fdid": "537423",
+      "etFetched": true
     },
     {
       "id": 1782643759268,
@@ -601,7 +603,12 @@
       "rh": 5,
       "ra": 6,
       "rt": true,
-      "fdid": "537415"
+      "fdid": "537415",
+      "eth": 0,
+      "eta": 0,
+      "pth": 3,
+      "pta": 4,
+      "etFetched": true
     },
     {
       "id": 1782643766394,
@@ -610,7 +617,12 @@
       "rh": 3,
       "ra": 4,
       "rt": true,
-      "fdid": "537418"
+      "fdid": "537418",
+      "eth": 0,
+      "eta": 0,
+      "pth": 2,
+      "pta": 3,
+      "etFetched": true
     },
     {
       "id": 1782643778655,
@@ -2197,7 +2209,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-06-30T15:00:57.000+02:00"
+    "lastChecked": "2026-06-30T15:24:12.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
