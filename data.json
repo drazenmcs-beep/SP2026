@@ -661,8 +661,8 @@
       "id": 1782643816506,
       "h": "SAD",
       "a": "BiH",
-      "rh": null,
-      "ra": null,
+      "rh": 2,
+      "ra": 0,
       "rt": true,
       "fdid": "537421"
     },
@@ -2269,7 +2269,7 @@
   },
   "settings": {
     "checkIntervalMinutes": 2,
-    "lastChecked": "2026-07-02T04:00:50.000+02:00"
+    "lastChecked": "2026-07-02T04:15:25.000+02:00"
   },
   "bonusGames": {
     "groupWinners": {
